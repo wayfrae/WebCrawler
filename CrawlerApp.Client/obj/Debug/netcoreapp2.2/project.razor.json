@@ -1,0 +1,14 @@
+{
+  "ProjectFilePath": "/Users/stringhamdb/Sandbox/weber-cs-org/cs4790/assignments/final/CrawlerApp.Client/CrawlerApp.Client.csproj",
+  "TargetFramework": "netcoreapp2.2",
+  "TagHelpers": [],
+  "Configuration": {
+    "ConfigurationName": "MVC-2.1",
+    "LanguageVersion": "2.1",
+    "Extensions": [
+      {
+        "ExtensionName": "MVC-2.1"
+      }
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+/Users/stringhamdb/Sandbox/weber-cs-org/cs4790/assignments/final/CrawlerApp.Console/obj/Debug/netcoreapp2.2/CrawlerApp.Console.csprojAssemblyReference.cache
+/Users/stringhamdb/Sandbox/weber-cs-org/cs4790/assignments/final/CrawlerApp.Console/obj/Debug/netcoreapp2.2/CrawlerApp.Console.csproj.CoreCompileInputs.cache
+/Users/stringhamdb/Sandbox/weber-cs-org/cs4790/assignments/final/CrawlerApp.Console/obj/Debug/netcoreapp2.2/CrawlerApp.Console.AssemblyInfoInputs.cache
+/Users/stringhamdb/Sandbox/weber-cs-org/cs4790/assignments/final/CrawlerApp.Console/obj/Debug/netcoreapp2.2/CrawlerApp.Console.AssemblyInfo.cs
+/Users/stringhamdb/Sandbox/weber-cs-org/cs4790/assignments/final/CrawlerApp.Console/bin/Debug/netcoreapp2.2/CrawlerApp.Console.deps.json
+/Users/stringhamdb/Sandbox/weber-cs-org/cs4790/assignments/final/CrawlerApp.Console/bin/Debug/netcoreapp2.2/CrawlerApp.Console.runtimeconfig.json
+/Users/stringhamdb/Sandbox/weber-cs-org/cs4790/assignments/final/CrawlerApp.Console/bin/Debug/netcoreapp2.2/CrawlerApp.Console.runtimeconfig.dev.json
+/Users/stringhamdb/Sandbox/weber-cs-org/cs4790/assignments/final/CrawlerApp.Console/bin/Debug/netcoreapp2.2/CrawlerApp.Console.dll
+/Users/stringhamdb/Sandbox/weber-cs-org/cs4790/assignments/final/CrawlerApp.Console/bin/Debug/netcoreapp2.2/CrawlerApp.Console.pdb
+/Users/stringhamdb/Sandbox/weber-cs-org/cs4790/assignments/final/CrawlerApp.Console/bin/Debug/netcoreapp2.2/CrawlerApp.DataStore.dll
+/Users/stringhamdb/Sandbox/weber-cs-org/cs4790/assignments/final/CrawlerApp.Console/bin/Debug/netcoreapp2.2/CrawlerApp.DataStore.pdb
+/Users/stringhamdb/Sandbox/weber-cs-org/cs4790/assignments/final/CrawlerApp.Console/obj/Debug/netcoreapp2.2/CrawlerApp.Console.csproj.CopyComplete
+/Users/stringhamdb/Sandbox/weber-cs-org/cs4790/assignments/final/CrawlerApp.Console/obj/Debug/netcoreapp2.2/CrawlerApp.Console.dll
+/Users/stringhamdb/Sandbox/weber-cs-org/cs4790/assignments/final/CrawlerApp.Console/obj/Debug/netcoreapp2.2/CrawlerApp.Console.pdb

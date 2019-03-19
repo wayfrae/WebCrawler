@@ -1,0 +1,8 @@
+CrawlerApp.Client/bin/
+CrawlerApp.Console/bin/
+CrawlerApp.DataStore/bin/
+CrawlerApp.Test/bin/
+CrawlerApp.Client/obj/
+CrawlerApp.Console/obj/
+CrawlerApp.DataStore/obj/
+CrawlerApp.Test/obj/
