@@ -30,7 +30,7 @@
   },
   "libraries": {
     "Microsoft.NETCore.Platforms/1.1.0": {
-      "sha512": "F4g5I5dVzyShQVeXQz4qPR+jm8wquOQ+OA/8LSJFUcadedDDs359BGtv5ymgAOKbgPpDHGpN5W4N/VcLbLoS0w==",
+      "sha512": "VhmFqlti7j7a6KgDxxWK1o7WUbi4JUH+9mHHNwCkE5Xo8mcVuQohdCLBR1RbGhcYv5E0s/e7fksHAKb4iP2Ewg==",
       "type": "package",
       "path": "microsoft.netcore.platforms/1.1.0",
       "files": [
@@ -179,28 +179,30 @@
     ]
   },
   "packageFolders": {
-    "/Users/stringhamdb/.nuget/packages/": {},
-    "/usr/local/share/dotnet/sdk/NuGetFallbackFolder": {}
+    "C:\\Users\\frazi\\.nuget\\packages\\": {},
+    "c:\\program files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/stringhamdb/Sandbox/weber-cs-org/cs4790/assignments/final/CrawlerApp.DataStore/CrawlerApp.DataStore.csproj",
+      "projectUniqueName": "C:\\Users\\frazi\\CS-4790\\13-final-project-wayfrae\\CrawlerApp.DataStore\\CrawlerApp.DataStore.csproj",
       "projectName": "CrawlerApp.DataStore",
-      "projectPath": "/Users/stringhamdb/Sandbox/weber-cs-org/cs4790/assignments/final/CrawlerApp.DataStore/CrawlerApp.DataStore.csproj",
-      "packagesPath": "/Users/stringhamdb/.nuget/packages/",
-      "outputPath": "/Users/stringhamdb/Sandbox/weber-cs-org/cs4790/assignments/final/CrawlerApp.DataStore/obj/",
+      "projectPath": "C:\\Users\\frazi\\CS-4790\\13-final-project-wayfrae\\CrawlerApp.DataStore\\CrawlerApp.DataStore.csproj",
+      "packagesPath": "C:\\Users\\frazi\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\frazi\\CS-4790\\13-final-project-wayfrae\\CrawlerApp.DataStore\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
+        "c:\\program files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "/Users/stringhamdb/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\frazi\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netstandard2.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
