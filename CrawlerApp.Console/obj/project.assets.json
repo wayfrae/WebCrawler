@@ -487,7 +487,7 @@
       ]
     },
     "Microsoft.NETCore.DotNetAppHost/2.2.0": {
-      "sha512": "qIrVLupwT2NYTrf7KM7Nh+mJr36V5MITVRjyGOByVVCwGmQgQmI/6bjZYQv+QdExi4Cm87eCKJX9FdT6nc00Xg==",
+      "sha512": "OK/H8p9Ig6mLMITjXJ4VOewrJg/TU+dAPHE4BdMWMv+8COzBehf7XF1+DofKkmqdHpO2cJoS5Sc9PEZ6PKCbsg==",
       "type": "package",
       "path": "microsoft.netcore.dotnetapphost/2.2.0",
       "files": [
@@ -702,35 +702,37 @@
     ]
   },
   "packageFolders": {
-    "/Users/stringhamdb/.nuget/packages/": {},
-    "/usr/local/share/dotnet/sdk/NuGetFallbackFolder": {}
+    "C:\\Users\\frazi\\.nuget\\packages\\": {},
+    "c:\\program files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/stringhamdb/Sandbox/weber-cs-org/cs4790/assignments/final/CrawlerApp.Console/CrawlerApp.Console.csproj",
+      "projectUniqueName": "C:\\Users\\frazi\\CS-4790\\13-final-project-wayfrae\\CrawlerApp.Console\\CrawlerApp.Console.csproj",
       "projectName": "CrawlerApp.Console",
-      "projectPath": "/Users/stringhamdb/Sandbox/weber-cs-org/cs4790/assignments/final/CrawlerApp.Console/CrawlerApp.Console.csproj",
-      "packagesPath": "/Users/stringhamdb/.nuget/packages/",
-      "outputPath": "/Users/stringhamdb/Sandbox/weber-cs-org/cs4790/assignments/final/CrawlerApp.Console/obj/",
+      "projectPath": "C:\\Users\\frazi\\CS-4790\\13-final-project-wayfrae\\CrawlerApp.Console\\CrawlerApp.Console.csproj",
+      "packagesPath": "C:\\Users\\frazi\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\frazi\\CS-4790\\13-final-project-wayfrae\\CrawlerApp.Console\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
+        "c:\\program files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "/Users/stringhamdb/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\frazi\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.2"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "netcoreapp2.2": {
           "projectReferences": {
-            "/Users/stringhamdb/Sandbox/weber-cs-org/cs4790/assignments/final/CrawlerApp.DataStore/CrawlerApp.DataStore.csproj": {
-              "projectPath": "/Users/stringhamdb/Sandbox/weber-cs-org/cs4790/assignments/final/CrawlerApp.DataStore/CrawlerApp.DataStore.csproj"
+            "C:\\Users\\frazi\\CS-4790\\13-final-project-wayfrae\\CrawlerApp.DataStore\\CrawlerApp.DataStore.csproj": {
+              "projectPath": "C:\\Users\\frazi\\CS-4790\\13-final-project-wayfrae\\CrawlerApp.DataStore\\CrawlerApp.DataStore.csproj"
             }
           }
         }
