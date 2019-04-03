@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CrawlerApp.DataStore
 {
-    class DataStorage : IDataStorage<Link>
+    public class DataStorage : IDataStorage<Link>
     {
         private List<Link> _links { get; set; }
 
@@ -48,6 +48,11 @@ namespace CrawlerApp.DataStore
 
                 throw;
             }
+        }
+
+        public DataStorage(List<Link> list)
+        {
+            _links = list;
         }
     }
 }

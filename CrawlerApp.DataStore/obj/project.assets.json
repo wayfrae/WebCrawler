@@ -30,7 +30,7 @@
   },
   "libraries": {
     "Microsoft.NETCore.Platforms/1.1.0": {
-      "sha512": "a/iSwnRZb+LHFk49hQOyThh/ZNC3vsbZsF65XwQIb863qF6msmhdQtxGXFL28Ob2NsCz/drEj28BJd/YPpLRBg==",
+      "sha512": "WklJgblRYsjogwRHWOyq5QHhP5kXWsZRohZrsS3FO2I/s6ByE+TU+zsIKYKdHnVAICQwpYheubFbNIR05X4xig==",
       "type": "package",
       "path": "microsoft.netcore.platforms/1.1.0",
       "files": [
@@ -180,7 +180,7 @@
   },
   "packageFolders": {
     "C:\\Users\\frazi\\.nuget\\packages\\": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "c:\\program files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
@@ -192,7 +192,7 @@
       "outputPath": "C:\\Users\\frazi\\CS-4790\\13-final-project-wayfrae\\CrawlerApp.DataStore\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        "c:\\program files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
         "C:\\Users\\frazi\\AppData\\Roaming\\NuGet\\NuGet.Config",
