@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace CrawlerApp.DataStore
 {
-    public interface IRepository<T> where T : EntityBase
+    public interface IDataStorage<T> where T : EntityBase
     {
         void Create(T obj);
         T GetByID(int id);
