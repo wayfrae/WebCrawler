@@ -842,6 +842,15 @@
           "lib/netstandard1.6/NuGet.Frameworks.dll": {}
         }
       },
+      "RobotsTxt/2014.2.19": {
+        "type": "package",
+        "compile": {
+          "lib/RobotsTxt.dll": {}
+        },
+        "runtime": {
+          "lib/RobotsTxt.dll": {}
+        }
+      },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {
         "type": "package",
         "runtimeTargets": {
@@ -2632,7 +2641,8 @@
         "framework": ".NETCoreApp,Version=v2.2",
         "dependencies": {
           "CrawlerApp.DataStore": "1.0.0",
-          "Microsoft.VisualStudio.Web.CodeGeneration.Design": "2.2.0"
+          "Microsoft.VisualStudio.Web.CodeGeneration.Design": "2.2.0",
+          "RobotsTxt": "2014.2.19"
         },
         "compile": {
           "bin/placeholder/CrawlerApp.Client.dll": {}
@@ -4280,6 +4290,19 @@
         "lib/netstandard1.6/NuGet.Frameworks.xml",
         "nuget.frameworks.4.7.0.nupkg.sha512",
         "nuget.frameworks.nuspec"
+      ]
+    },
+    "RobotsTxt/2014.2.19": {
+      "sha512": "9a+I+wut78j4SUZ+HtfxsQJL0CTSH4FHVZMf8/bjjtzAAgdMFedlAnScrgcF5W4X92L/UXHI2OGQHH/IQkb3ZA==",
+      "type": "package",
+      "path": "robotstxt/2014.2.19",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/RobotsTxt.XML",
+        "lib/RobotsTxt.dll",
+        "robotstxt.2014.2.19.nupkg.sha512",
+        "robotstxt.nuspec"
       ]
     },
     "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {
@@ -8733,5 +8756,17 @@
         "warn": true
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'RobotsTxt 2014.2.19' was restored using '.NETFramework,Version=v4.6.1' instead of the project target framework '.NETCoreApp,Version=v2.2'. This package may not be fully compatible with your project.",
+      "libraryId": "RobotsTxt",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v2.2"
+      ]
+    }
+  ]
 }

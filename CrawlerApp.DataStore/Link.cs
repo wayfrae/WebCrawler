@@ -8,9 +8,17 @@ namespace CrawlerApp.DataStore
 {
     public class Link : EntityBase
     {
-        public string Address { get; set; }
-        public string Response { get; set; }
-        public List<string> FoundLinks { get; set; } 
-        public bool IsCrawled { get; set; }
+        public List<string> AssociatedLinks { get; set; }
+        
+        public Link(List<string> list)
+        {
+            AssociatedLinks = list;
+        }
+
+        public Link(List<string> list, string address)
+        {
+            AssociatedLinks = list;
+            Address = address;
+        }
     }
 }

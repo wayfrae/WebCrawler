@@ -10,23 +10,17 @@ namespace CrawlerApp.Console
     {
         static void Main(string[] args)
         {
-            Link startLink = new Link
-            {
-                Address = "http://example.com/"
-            };
+            Link startLink = new Link(new List<string>(), "http://example.com");
             List<Link> links = new List<Link>();
 
             DataStorage storage = new DataStorage(links);
 
-            Link link = new Link
-            {
-                FoundLinks = new System.Collections.Generic.List<string>()
-            };
-            List<string> list = new List<string>();
+            Link link = new Link(new System.Collections.Generic.List<string>());
+            
+            List<Link> list = new List<Link>();
             Crawler crawler = new Crawler(new HttpClient(), new HtmlDocument(), storage, list);
 
-            crawler.Start("http://example.com/", link);
-            System.Console.ReadLine();
+            while(crawler.Start(new Uri("http://example.com/")).Result);
         }
     }
 }

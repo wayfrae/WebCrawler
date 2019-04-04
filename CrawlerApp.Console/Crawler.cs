@@ -10,15 +10,15 @@ namespace CrawlerApp.Console
 {
     public class Crawler
     {
-        private string _currentAddress;
+        private Uri _currentAddress;
         private HttpClient _httpClient;
         private HtmlDocument _htmlDocument;
         private IDataStorage<Link> _storage;
 
-        public List<string> LinksToCrawl { get; private set; }
+        public List<Link> LinksToCrawl { get; private set; }
         public bool IsCrawling { get; private set; }
 
-        public Crawler(HttpClient client, HtmlDocument document, IDataStorage<Link> storage, List<string> list)
+        public Crawler(HttpClient client, HtmlDocument document, IDataStorage<Link> storage, List<Link> list)
         {
             _httpClient = client;
             _htmlDocument = document;
@@ -26,48 +26,99 @@ namespace CrawlerApp.Console
             LinksToCrawl = list;
         }
 
-        public async Task Start(string urlToCrawl, Link emptyLink)
+        public async Task<bool> Start(Uri urlToCrawl)
         {
             IsCrawling = true;
             _currentAddress = urlToCrawl;
 
-            await StartCrawlerAsync(emptyLink);
+            await StartCrawlerAsync(urlToCrawl, new Link(new List<string>()));
+
+            return false;
         }
 
-        private async Task StartCrawlerAsync(Link linkToSave)
+        private async Task StartCrawlerAsync(Uri startingUrlToCrawl, Link crawlerObjective)
         {
+            Uri urlToCrawl = startingUrlToCrawl;
+
             while (IsCrawling)
             {
-                using (var html = await _httpClient.GetAsync(_currentAddress))
-                {
-                    using (var content = html.Content)
-                    {
-                        var baseUrl = new Uri(_currentAddress);
-                        linkToSave.Address = _currentAddress;
-                        linkToSave.Response = await content.ReadAsStringAsync();
-                        _htmlDocument.LoadHtml(linkToSave.Response);
+                await Crawl(urlToCrawl, crawlerObjective);
 
-                        foreach (HtmlNode link in _htmlDocument.DocumentNode.SelectNodes("//a[@href]"))
-                        {
-                            var url = new Uri(baseUrl, link.GetAttributeValue("href", string.Empty));
-                            linkToSave.FoundLinks.Add(url.AbsoluteUri);
-                            LinksToCrawl.Add(url.AbsoluteUri);
-                        }
-                        linkToSave.IsCrawled = true;
-                        _storage.Create(linkToSave);
-                        LinksToCrawl.Remove(_currentAddress);                        
-                        if(LinksToCrawl.Count > 0)
-                        {
-                            _currentAddress = LinksToCrawl[0];
-                        }
-                        else
-                        {
-                            IsCrawling = false;
-                        }
+                foreach(Link link in _storage.GetAll())
+                {
+                    if (!link.IsCrawled && LinksToCrawl.Find(x=>x.Address.Equals(link.Address)) == null)
+                    {
+                        LinksToCrawl.Add(link);
                     }
                 }
-            }
-                    
+
+                if (LinksToCrawl.Count > 0)
+                {
+                    urlToCrawl = StringToUri(LinksToCrawl[0].Address);
+                    LinksToCrawl.RemoveAt(0);
+                }
+                else
+                {
+                    IsCrawling = false;
+                }
+            }                    
         }
+
+        private Uri StringToUri(string address)
+        {
+            return new Uri(address);
+        }
+
+        private async Task Crawl(Uri urlToCrawl, Link crawlerObjective)
+        {
+            try
+            {                
+                using (var html = await _httpClient.GetAsync(urlToCrawl))
+                {                  
+                    if (html.IsSuccessStatusCode)
+                    {
+                        using (var content = html.Content)
+                        {                            
+                            var page = await content.ReadAsStringAsync();
+                            _htmlDocument.LoadHtml(page);
+
+                            ParseAndSave(urlToCrawl, _htmlDocument, crawlerObjective);                            
+                        }
+                    }
+                    crawlerObjective.Address = urlToCrawl.AbsoluteUri;
+                    crawlerObjective.Response = html.ToString();
+                    crawlerObjective.IsCrawled = true;
+                    _storage.Create(crawlerObjective);
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        private void ParseAndSave(Uri urlToCrawl, HtmlDocument htmlDocument, Link linkObject)
+        {            
+            foreach (HtmlNode link in htmlDocument.DocumentNode.SelectNodes("//a[@href]"))
+            {
+                linkObject.AssociatedLinks.Add(link.GetAttributeValue("href", string.Empty));
+                _storage.Create(CreateObject(GetAbsolutePath(urlToCrawl, link), new Link(new List<string>())));
+            }
+                       
+        }        
+
+        private Link CreateObject(string url, Link definition)
+        {
+            definition.Address = url;
+            definition.IsCrawled = false;
+
+            return definition;
+        }
+
+        private string GetAbsolutePath(Uri baseUrl, HtmlNode link)
+        {
+            return new Uri(baseUrl, link.GetAttributeValue("href", string.Empty)).AbsoluteUri;
+        }                
     }
 }
