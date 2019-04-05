@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CrawlerApp.DataStore
+namespace CrawlerApp.Client
 {
     public class EntityBase
     {

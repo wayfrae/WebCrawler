@@ -31,7 +31,7 @@ namespace CrawlerApp.Console
             IsCrawling = true;
             _currentAddress = urlToCrawl;
 
-            await StartCrawlerAsync(urlToCrawl, new Link(new List<string>()));
+            await StartCrawlerAsync(urlToCrawl, new Link(new List<AssociatedLink>()));
 
             return false;
         }
@@ -82,7 +82,7 @@ namespace CrawlerApp.Console
                             var page = await content.ReadAsStringAsync();
                             _htmlDocument.LoadHtml(page);
 
-                            ParseAndSave(urlToCrawl, _htmlDocument, crawlerObjective);                            
+                            ParseAndSave(urlToCrawl, _htmlDocument, crawlerObjective, new AssociatedLink());                            
                         }
                     }
                     crawlerObjective.Address = urlToCrawl.AbsoluteUri;
@@ -98,12 +98,13 @@ namespace CrawlerApp.Console
             }
         }
 
-        private void ParseAndSave(Uri urlToCrawl, HtmlDocument htmlDocument, Link linkObject)
+        private void ParseAndSave(Uri urlToCrawl, HtmlDocument htmlDocument, Link linkObject, AssociatedLink associatedLink)
         {            
             foreach (HtmlNode link in htmlDocument.DocumentNode.SelectNodes("//a[@href]"))
             {
-                linkObject.AssociatedLinks.Add(link.GetAttributeValue("href", string.Empty));
-                _storage.Create(CreateObject(GetAbsolutePath(urlToCrawl, link), new Link(new List<string>())));
+                associatedLink.Address = link.GetAttributeValue("href", string.Empty);
+                linkObject.AssociatedLinks.Add(associatedLink);
+                _storage.Create(CreateObject(GetAbsolutePath(urlToCrawl, link), new Link(new List<AssociatedLink>())));
             }
                        
         }        
