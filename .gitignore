@@ -8,3 +8,4 @@ CrawlerApp.DataStore/obj/
 CrawlerApp.Test/obj/
 /.vs
 **/azureKeyVault.json
+**/appsettings.json
