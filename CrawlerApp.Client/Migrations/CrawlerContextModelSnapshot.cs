@@ -17,28 +17,16 @@ namespace CrawlerApp.Client.Migrations
                 .HasAnnotation("ProductVersion", "2.2.1-servicing-10028")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("CrawlerApp.Client.Models.AssociatedLink", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Address");
-
-                    b.Property<int?>("LinkID");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("LinkID");
-
-                    b.ToTable("AssociatedLink");
-                });
-
             modelBuilder.Entity("CrawlerApp.Client.Models.Link", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<long>("ID")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Address");
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<string>("FoundOn");
 
                     b.Property<bool>("IsCrawled");
 
@@ -47,13 +35,6 @@ namespace CrawlerApp.Client.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Links");
-                });
-
-            modelBuilder.Entity("CrawlerApp.Client.Models.AssociatedLink", b =>
-                {
-                    b.HasOne("CrawlerApp.Client.Models.Link")
-                        .WithMany("AssociatedLinks")
-                        .HasForeignKey("LinkID");
                 });
 #pragma warning restore 612, 618
         }

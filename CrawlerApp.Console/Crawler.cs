@@ -5,6 +5,8 @@ using System.Net.Http;
 using HtmlAgilityPack;
 using System.Threading.Tasks;
 using CrawlerApp.DataStore;
+using RobotsTxt;
+using System.IO;
 
 namespace CrawlerApp.Console
 {
@@ -14,6 +16,9 @@ namespace CrawlerApp.Console
         private HttpClient _httpClient;
         private HtmlDocument _htmlDocument;
         private IDataStorage<Link> _storage;
+        private string _userAgent;
+
+        private Robots robot { get; set; }
 
         public List<Link> LinksToCrawl { get; private set; }
         public bool IsCrawling { get; private set; }
@@ -21,6 +26,9 @@ namespace CrawlerApp.Console
         public Crawler(HttpClient client, HtmlDocument document, IDataStorage<Link> storage, List<Link> list)
         {
             _httpClient = client;
+            _userAgent = "WeberStateUniversityWebCrawler / 1.0 wayfrae";
+            _httpClient.DefaultRequestHeaders.Add("User-Agent", _userAgent);
+
             _htmlDocument = document;
             _storage = storage;
             LinksToCrawl = list;
@@ -31,7 +39,7 @@ namespace CrawlerApp.Console
             IsCrawling = true;
             _currentAddress = urlToCrawl;
 
-            await StartCrawlerAsync(urlToCrawl, new Link(new List<AssociatedLink>()));
+            await StartCrawlerAsync(urlToCrawl, new Link());
 
             return false;
         }
@@ -44,17 +52,17 @@ namespace CrawlerApp.Console
             {
                 await Crawl(urlToCrawl, crawlerObjective);
 
-                foreach(Link link in _storage.GetAll())
+                foreach(Link link  in _storage.GetAll())
                 {
                     if (!link.IsCrawled && LinksToCrawl.Find(x=>x.Address.Equals(link.Address)) == null)
                     {
                         LinksToCrawl.Add(link);
                     }
                 }
-
+                
                 if (LinksToCrawl.Count > 0)
                 {
-                    urlToCrawl = StringToUri(LinksToCrawl[0].Address);
+                    urlToCrawl = StringToUri(LinksToCrawl[0].Address);                    
                     LinksToCrawl.RemoveAt(0);
                 }
                 else
@@ -71,45 +79,76 @@ namespace CrawlerApp.Console
 
         private async Task Crawl(Uri urlToCrawl, Link crawlerObjective)
         {
+            
             try
-            {                
-                using (var html = await _httpClient.GetAsync(urlToCrawl))
-                {                  
-                    if (html.IsSuccessStatusCode)
+            {
+                /////******************************************************************//////
+                //figure out how to check for download files and other types of responses
+                ////*********************************************************************////
+                using (var robotsTxt = await _httpClient.GetAsync(urlToCrawl.AbsoluteUri + "/robots.txt"))
+                {
+                    if (robotsTxt.IsSuccessStatusCode)
                     {
-                        using (var content = html.Content)
-                        {                            
-                            var page = await content.ReadAsStringAsync();
-                            _htmlDocument.LoadHtml(page);
+                        robot = Robots.Load(await robotsTxt.Content.ReadAsStringAsync());
+                    }
+                    else
+                    {
+                        robot = null;
+                    }
+                }
 
-                            ParseAndSave(urlToCrawl, _htmlDocument, crawlerObjective, new AssociatedLink());                            
+                if(robot == null || robot.IsPathAllowed(_userAgent, urlToCrawl.AbsoluteUri))
+                {
+                    using (var html = await _httpClient.GetAsync(urlToCrawl))
+                    {
+                        crawlerObjective.Date = DateTime.Now;
+                        crawlerObjective.Address = urlToCrawl.AbsoluteUri;
+                        crawlerObjective.Response = html.ToString();
+                        crawlerObjective.IsCrawled = true;
+                        if (string.IsNullOrEmpty(crawlerObjective.FoundOn))
+                        {
+                            crawlerObjective.FoundOn = urlToCrawl.AbsoluteUri;
+                        }
+
+                        _storage.Create(crawlerObjective);
+
+                        if (html.IsSuccessStatusCode)
+                        {
+                            using (var content = html.Content)
+                            {
+                                var page = await content.ReadAsStringAsync();
+                                _htmlDocument.LoadHtml(page);
+                                ParseHtml(urlToCrawl, _htmlDocument);
+                            }
                         }
                     }
-                    crawlerObjective.Address = urlToCrawl.AbsoluteUri;
-                    crawlerObjective.Response = html.ToString();
-                    crawlerObjective.IsCrawled = true;
-                    _storage.Create(crawlerObjective);
-                }
-            }
-            catch (Exception)
+                }                
+             }
+            catch (Exception e )
             {
 
-                throw;
+                System.Console.WriteLine(e.Message);
+                System.Console.WriteLine(e.StackTrace);
             }
         }
 
-        private void ParseAndSave(Uri urlToCrawl, HtmlDocument htmlDocument, Link linkObject, AssociatedLink associatedLink)
-        {            
-            foreach (HtmlNode link in htmlDocument.DocumentNode.SelectNodes("//a[@href]"))
-            {
-                associatedLink.Address = link.GetAttributeValue("href", string.Empty);
-                linkObject.AssociatedLinks.Add(associatedLink);
-                _storage.Create(CreateObject(GetAbsolutePath(urlToCrawl, link), new Link(new List<AssociatedLink>())));
-            }
-                       
+        private void ParseHtml(Uri urlToCrawl, HtmlDocument htmlDocument)
+        {
+            
+                foreach (HtmlNode link in htmlDocument.DocumentNode.SelectNodes("//a[@href]"))
+                {
+                    var linkToSave = CreateLink(GetAbsolutePath(urlToCrawl, link), new Link());
+                    if (!linkToSave.Address.Contains("javascript"))
+                    {
+                        LinksToCrawl.Add(linkToSave);
+                        linkToSave.FoundOn = urlToCrawl.AbsoluteUri;
+                        _storage.Create(linkToSave);
+                    }
+                }
+                  
         }        
 
-        private Link CreateObject(string url, Link definition)
+        private Link CreateLink(string url, Link definition)
         {
             definition.Address = url;
             definition.IsCrawled = false;

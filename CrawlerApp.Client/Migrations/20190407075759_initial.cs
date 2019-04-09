@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CrawlerApp.Client.Migrations
 {
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,11 +12,13 @@ namespace CrawlerApp.Client.Migrations
                 name: "Links",
                 columns: table => new
                 {
-                    ID = table.Column<int>(nullable: false)
+                    ID = table.Column<long>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Address = table.Column<string>(nullable: true),
                     Response = table.Column<string>(nullable: true),
-                    IsCrawled = table.Column<bool>(nullable: false)
+                    IsCrawled = table.Column<bool>(nullable: false),
+                    Date = table.Column<DateTime>(nullable: false),
+                    FoundOn = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

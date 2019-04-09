@@ -7,12 +7,12 @@
 /Users/stringhamdb/Sandbox/weber-cs-org/cs4790/assignments/final/CrawlerApp.DataStore/obj/Debug/netstandard2.0/CrawlerApp.DataStore.AssemblyInfo.cs
 /Users/stringhamdb/Sandbox/weber-cs-org/cs4790/assignments/final/CrawlerApp.DataStore/obj/Debug/netstandard2.0/CrawlerApp.DataStore.dll
 /Users/stringhamdb/Sandbox/weber-cs-org/cs4790/assignments/final/CrawlerApp.DataStore/obj/Debug/netstandard2.0/CrawlerApp.DataStore.pdb
-C:\Users\frazi\CS-4790\13-final-project-wayfrae\CrawlerApp.DataStore\obj\Debug\netstandard2.0\CrawlerApp.DataStore.csprojAssemblyReference.cache
+C:\Users\frazi\CS-4790\13-final-project-wayfrae\CrawlerApp.DataStore\bin\Debug\netstandard2.0\CrawlerApp.DataStore.deps.json
+C:\Users\frazi\CS-4790\13-final-project-wayfrae\CrawlerApp.DataStore\bin\Debug\netstandard2.0\CrawlerApp.DataStore.dll
 C:\Users\frazi\CS-4790\13-final-project-wayfrae\CrawlerApp.DataStore\obj\Debug\netstandard2.0\CrawlerApp.DataStore.csproj.CoreCompileInputs.cache
 C:\Users\frazi\CS-4790\13-final-project-wayfrae\CrawlerApp.DataStore\obj\Debug\netstandard2.0\CrawlerApp.DataStore.AssemblyInfoInputs.cache
 C:\Users\frazi\CS-4790\13-final-project-wayfrae\CrawlerApp.DataStore\obj\Debug\netstandard2.0\CrawlerApp.DataStore.AssemblyInfo.cs
+C:\Users\frazi\CS-4790\13-final-project-wayfrae\CrawlerApp.DataStore\bin\Debug\netstandard2.0\CrawlerApp.DataStore.pdb
+C:\Users\frazi\CS-4790\13-final-project-wayfrae\CrawlerApp.DataStore\obj\Debug\netstandard2.0\CrawlerApp.DataStore.csprojAssemblyReference.cache
 C:\Users\frazi\CS-4790\13-final-project-wayfrae\CrawlerApp.DataStore\obj\Debug\netstandard2.0\CrawlerApp.DataStore.dll
 C:\Users\frazi\CS-4790\13-final-project-wayfrae\CrawlerApp.DataStore\obj\Debug\netstandard2.0\CrawlerApp.DataStore.pdb
-C:\Users\frazi\CS-4790\13-final-project-wayfrae\CrawlerApp.DataStore\bin\Debug\netstandard2.0\CrawlerApp.DataStore.deps.json
-C:\Users\frazi\CS-4790\13-final-project-wayfrae\CrawlerApp.DataStore\bin\Debug\netstandard2.0\CrawlerApp.DataStore.dll
-C:\Users\frazi\CS-4790\13-final-project-wayfrae\CrawlerApp.DataStore\bin\Debug\netstandard2.0\CrawlerApp.DataStore.pdb

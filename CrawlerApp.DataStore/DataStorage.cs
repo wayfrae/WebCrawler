@@ -40,7 +40,7 @@ namespace CrawlerApp.DataStore
         {
             try
             {
-                var temp = _links.Find(x => x.ID == obj.ID);
+                var temp = _links.Find(x => x.Address == obj.Address && x.FoundOn == obj.FoundOn);
                 temp = obj;
             }
             catch (Exception)

@@ -3,6 +3,7 @@ using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace CrawlerApp.Console
 {
@@ -10,17 +11,16 @@ namespace CrawlerApp.Console
     {
         static void Main(string[] args)
         {
-            Link startLink = new Link(new List<AssociatedLink>(), "http://example.com");
             List<Link> links = new List<Link>();
+            DataStorageMySql storage = new DataStorageMySql(links, new MySql.Data.MySqlClient.MySqlConnection());
 
-            DataStorage storage = new DataStorage(links);
-
-            Link link = new Link(new System.Collections.Generic.List<AssociatedLink>());
-            
             List<Link> list = new List<Link>();
             Crawler crawler = new Crawler(new HttpClient(), new HtmlDocument(), storage, list);
 
-            while(crawler.Start(new Uri("http://example.com/")).Result);
+
+            Task.Run(async () => { await crawler.Start(new Uri("http://example.com/")); }).GetAwaiter();
+            System.Console.WriteLine("The crawler is running. Press any key to stop...");
+            System.Console.ReadLine();
         }
     }
 }
