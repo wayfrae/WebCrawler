@@ -13,6 +13,6 @@ C:\Users\frazi\CS-4790\13-final-project-wayfrae\CrawlerApp.DataStore\obj\Debug\n
 C:\Users\frazi\CS-4790\13-final-project-wayfrae\CrawlerApp.DataStore\obj\Debug\netstandard2.0\CrawlerApp.DataStore.AssemblyInfoInputs.cache
 C:\Users\frazi\CS-4790\13-final-project-wayfrae\CrawlerApp.DataStore\obj\Debug\netstandard2.0\CrawlerApp.DataStore.AssemblyInfo.cs
 C:\Users\frazi\CS-4790\13-final-project-wayfrae\CrawlerApp.DataStore\bin\Debug\netstandard2.0\CrawlerApp.DataStore.pdb
-C:\Users\frazi\CS-4790\13-final-project-wayfrae\CrawlerApp.DataStore\obj\Debug\netstandard2.0\CrawlerApp.DataStore.csprojAssemblyReference.cache
 C:\Users\frazi\CS-4790\13-final-project-wayfrae\CrawlerApp.DataStore\obj\Debug\netstandard2.0\CrawlerApp.DataStore.dll
 C:\Users\frazi\CS-4790\13-final-project-wayfrae\CrawlerApp.DataStore\obj\Debug\netstandard2.0\CrawlerApp.DataStore.pdb
+C:\Users\frazi\CS-4790\13-final-project-wayfrae\CrawlerApp.DataStore\obj\Debug\netstandard2.0\CrawlerApp.DataStore.csprojAssemblyReference.cache

@@ -10,14 +10,14 @@ namespace CrawlerApp.DataStore
     {
 
         private string _connectionString = "server=school-projects.mysql.database.azure.com;uid=wayfrae@school-projects;pwd=Password1;database=webcrawler";
-        private List<Link> _list;
-        private MySqlConnection _connection;
+        private List<Link> _links;
+        private MySqlConnection connection;
 
         public DataStorageMySql(List<Link> list, MySqlConnection connection)
         {
-            _list = list;
-            _connection = connection;
-            _connection.ConnectionString = _connectionString;
+            _links = list;
+            this.connection = connection;
+            this.connection.ConnectionString = _connectionString;
 
         }
 
@@ -25,24 +25,26 @@ namespace CrawlerApp.DataStore
         {
                 try
                 {
-                    _connection.Open();
-                    MySqlCommand cmd = _connection.CreateCommand();
-                    //cmd.CommandText = "INSERT INTO links(Address, Response, IsCrawled) SELECT * FROM (SELECT @address, @response, @isCrawled) AS tmp WHERE NOT EXISTS(SELECT Address FROM links WHERE Address = @address); ";
-                    cmd.CommandText = "INSERT INTO links(Address, Response, IsCrawled, `Date`, `FoundOn`) VALUES(@address, @response, @isCrawled, @date, @foundOn) ON DUPLICATE KEY UPDATE Address=@address, Response=@response, IsCrawled=@isCrawled, Date=@date, FoundOn=@foundOn;";
-                    cmd.Parameters.Clear();
-                    cmd.Parameters.Add("@address", MySqlDbType.LongText).Value = obj.Address;
-                    cmd.Parameters.Add("@response", MySqlDbType.LongText).Value = obj.Response;
-                    cmd.Parameters.Add("@isCrawled", MySqlDbType.Bit).Value = obj.IsCrawled;
-                    cmd.Parameters.Add("@date", MySqlDbType.DateTime).Value = obj.Date;
-                    cmd.Parameters.Add("@foundOn", MySqlDbType.LongText).Value = obj.FoundOn;
-                    var rowsAffected = cmd.ExecuteNonQuery();
-                    obj.ID = cmd.LastInsertedId;                    
+                    using(var connection = new MySqlConnection(_connectionString))
+                    {
+                        connection.Open();
+                        MySqlCommand cmd = connection.CreateCommand();
+                        cmd.CommandText = "INSERT INTO links(Address, Response, IsCrawled, `Date`, `FoundOn`) VALUES(@address, @response, @isCrawled, @date, @foundOn) ON DUPLICATE KEY UPDATE Address=@address, Response=@response, IsCrawled=@isCrawled, Date=@date, FoundOn=@foundOn;";
+                        cmd.Parameters.Clear();
+                        cmd.Parameters.Add("@address", MySqlDbType.LongText).Value = obj.Address;
+                        cmd.Parameters.Add("@response", MySqlDbType.LongText).Value = obj.Response;
+                        cmd.Parameters.Add("@isCrawled", MySqlDbType.Bit).Value = obj.IsCrawled;
+                        cmd.Parameters.Add("@date", MySqlDbType.DateTime).Value = obj.Date;
+                        cmd.Parameters.Add("@foundOn", MySqlDbType.LongText).Value = obj.FoundOn;
+                        var rowsAffected = cmd.ExecuteNonQuery();
+                        obj.ID = cmd.LastInsertedId;
+                    }
+                                        
                 }
             catch (Exception ex)
                 {
                     Console.WriteLine(ex.ToString());
                 }       
-                _connection.Close();
 
         }
 
@@ -70,39 +72,69 @@ namespace CrawlerApp.DataStore
 
         public IEnumerable<Link> GetAll()
         {
-            _list.Clear();
+            _links.Clear();
             
                 try
                 {
-                    MySqlCommand cmd = _connection.CreateCommand();
+                using (var connection = new MySqlConnection(_connectionString))
+                {
+                    MySqlCommand cmd = connection.CreateCommand();
                     cmd.CommandText = "SELECT * FROM links";
-                    _connection.Open();
+                    connection.Open();
                     using (MySqlDataReader rdr = cmd.ExecuteReader())
                     {
                         while (rdr.Read())
                         {
                             Link link = CreateLink(rdr[0], rdr[1], rdr[2], rdr[3], rdr[4]);
-                            _list.Add(link);
+                            _links.Add(link);
                         }
-                    }
+                    } 
+                }
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.ToString());
                 }
-            _connection.Close();
 
-            return _list;
+            return _links;
         }        
 
         public Link GetByID(int id)
         {
-            throw new NotImplementedException();
+            if(FindLink(id) == null)
+            {
+                GetAll();
+            }
+            return FindLink(id);
         }
 
-        public void Update(Link obj)
+        private Link FindLink(int id)
         {
-            throw new NotImplementedException();
+            Link link = _links.Find(x => x.ID == id);
+            return link;
+        }
+
+        public bool Update(Link obj)
+        {
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+                MySqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = $"UPDATE links SET Address=@address, Response=@response, IsCrawled=@isCrawled, Date=@date, FoundOn=@foundOn WHERE id={obj.ID};";
+                cmd.Parameters.Add("@address", MySqlDbType.LongText).Value = obj.Address;
+                cmd.Parameters.Add("@response", MySqlDbType.LongText).Value = obj.Response;
+                cmd.Parameters.Add("@isCrawled", MySqlDbType.Bit).Value = obj.IsCrawled;
+                cmd.Parameters.Add("@date", MySqlDbType.DateTime).Value = obj.Date;
+                cmd.Parameters.Add("@foundOn", MySqlDbType.LongText).Value = obj.FoundOn;
+                var rowsAffected = cmd.ExecuteNonQuery();
+
+                if (rowsAffected == 0)
+                {
+                    return false;
+                }
+                return true; 
+            }
+
         }
         
         private Link CreateLink(object v1, object v2, object v3, object v4, object v5)

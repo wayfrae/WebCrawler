@@ -62,4 +62,3 @@ C:\Users\frazi\CS-4790\13-final-project-wayfrae\CrawlerApp.Client\obj\Debug\netc
 C:\Users\frazi\CS-4790\13-final-project-wayfrae\CrawlerApp.Client\obj\Debug\netcoreapp2.2\CrawlerApp.Client.csproj.CopyComplete
 C:\Users\frazi\CS-4790\13-final-project-wayfrae\CrawlerApp.Client\obj\Debug\netcoreapp2.2\CrawlerApp.Client.dll
 C:\Users\frazi\CS-4790\13-final-project-wayfrae\CrawlerApp.Client\obj\Debug\netcoreapp2.2\CrawlerApp.Client.pdb
-C:\Users\frazi\CS-4790\13-final-project-wayfrae\CrawlerApp.Client\bin\Debug\netcoreapp2.2\azurekeyvault.json

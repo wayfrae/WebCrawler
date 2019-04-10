@@ -7,40 +7,64 @@ using System.Threading.Tasks;
 using CrawlerApp.DataStore;
 using RobotsTxt;
 using System.IO;
+using System.Threading;
 
 namespace CrawlerApp.Console
 {
-    public class Crawler
+    public class Crawler : ICrawler
     {
         private Uri _currentAddress;
         private HttpClient _httpClient;
         private HtmlDocument _htmlDocument;
         private IDataStorage<Link> _storage;
         private string _userAgent;
-
+        private int _threadsAvailable;
+        private int _IOthreadsAvailable;
         private Robots robot { get; set; }
+        private IScheduler _scheduler;
+        private int _threadLimit;
 
-        public List<Link> LinksToCrawl { get; private set; }
         public bool IsCrawling { get; private set; }
 
-        public Crawler(HttpClient client, HtmlDocument document, IDataStorage<Link> storage, List<Link> list)
+        public Crawler(HttpClient client, HtmlDocument document, IDataStorage<Link> storage, IScheduler scheduler, int numberOfThreads)
         {
             _httpClient = client;
             _userAgent = "WeberStateUniversityWebCrawler / 1.0 wayfrae";
             _httpClient.DefaultRequestHeaders.Add("User-Agent", _userAgent);
 
+            _scheduler = scheduler;
             _htmlDocument = document;
             _storage = storage;
-            LinksToCrawl = list;
+            _threadLimit = numberOfThreads;
+            
         }
 
         public async Task<bool> Start(Uri urlToCrawl)
         {
             IsCrawling = true;
             _currentAddress = urlToCrawl;
-
-            await StartCrawlerAsync(urlToCrawl, new Link());
-
+            foreach(var link in _storage.GetAll())
+            {
+                if (!link.IsCrawled)
+                {
+                    _scheduler.Push(link);
+                }
+            }
+            List<Task> tasks = new List<Task>();
+            ThreadPool.GetAvailableThreads(out _threadsAvailable, out _IOthreadsAvailable);
+            while (IsCrawling && _threadsAvailable > _threadLimit)
+            {
+                for (var i = _threadLimit; i > 0; i--)
+                {
+                    tasks.Add(Task.Run(()=>StartCrawlerAsync(urlToCrawl, new Link())));
+                    _threadLimit--;
+                    if (_scheduler.HasNext())
+                    {
+                        urlToCrawl = StringToUri(_scheduler.GetNext().Address);
+                    }
+                }
+            }
+            await Task.WhenAll(tasks);
             return false;
         }
 
@@ -50,23 +74,24 @@ namespace CrawlerApp.Console
 
             while (IsCrawling)
             {
+                
                 await Crawl(urlToCrawl, crawlerObjective);
-
-                foreach(Link link  in _storage.GetAll())
+                List<Link> linksToCrawl = _storage.GetAll() as List<Link>;
+                foreach(Link link  in linksToCrawl)
                 {
-                    if (!link.IsCrawled && LinksToCrawl.Find(x=>x.Address.Equals(link.Address)) == null)
+                    if (!link.IsCrawled && linksToCrawl.Find(x=>x.Address.Equals(link.Address)) == null)
                     {
-                        LinksToCrawl.Add(link);
+                        linksToCrawl.Add(link);
                     }
                 }
                 
-                if (LinksToCrawl.Count > 0)
+                if (_scheduler.HasNext())
                 {
-                    urlToCrawl = StringToUri(LinksToCrawl[0].Address);                    
-                    LinksToCrawl.RemoveAt(0);
+                    urlToCrawl = StringToUri(_scheduler.GetNext().Address);                    
                 }
                 else
                 {
+                    _threadLimit++;
                     IsCrawling = false;
                 }
             }                    
@@ -79,12 +104,9 @@ namespace CrawlerApp.Console
 
         private async Task Crawl(Uri urlToCrawl, Link crawlerObjective)
         {
-            
             try
             {
-                /////******************************************************************//////
-                //figure out how to check for download files and other types of responses
-                ////*********************************************************************////
+                
                 using (var robotsTxt = await _httpClient.GetAsync(urlToCrawl.AbsoluteUri + "/robots.txt"))
                 {
                     if (robotsTxt.IsSuccessStatusCode)
@@ -112,7 +134,7 @@ namespace CrawlerApp.Console
 
                         _storage.Create(crawlerObjective);
 
-                        if (html.IsSuccessStatusCode)
+                        if (html.IsSuccessStatusCode) 
                         {
                             using (var content = html.Content)
                             {
@@ -134,18 +156,20 @@ namespace CrawlerApp.Console
 
         private void ParseHtml(Uri urlToCrawl, HtmlDocument htmlDocument)
         {
-            
+            //check that there is html to parse
+            if(htmlDocument.DocumentNode.SelectSingleNode("html") != null)
+            {
                 foreach (HtmlNode link in htmlDocument.DocumentNode.SelectNodes("//a[@href]"))
                 {
                     var linkToSave = CreateLink(GetAbsolutePath(urlToCrawl, link), new Link());
                     if (!linkToSave.Address.Contains("javascript"))
                     {
-                        LinksToCrawl.Add(linkToSave);
+                        _scheduler.Push(linkToSave);
                         linkToSave.FoundOn = urlToCrawl.AbsoluteUri;
                         _storage.Create(linkToSave);
                     }
                 }
-                  
+            }                 
         }        
 
         private Link CreateLink(string url, Link definition)
@@ -159,6 +183,12 @@ namespace CrawlerApp.Console
         private string GetAbsolutePath(Uri baseUrl, HtmlNode link)
         {
             return new Uri(baseUrl, link.GetAttributeValue("href", string.Empty)).AbsoluteUri;
-        }                
+        }
+
+        public void Stop()
+        {
+            throw new NotImplementedException();
+        }
+                
     }
 }

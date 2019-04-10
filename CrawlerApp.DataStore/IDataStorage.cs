@@ -8,7 +8,7 @@ namespace CrawlerApp.DataStore
         void Create(T obj);
         T GetByID(int id);
         IEnumerable<T> GetAll();
-        void Update(T obj);
+        bool Update(T obj);
         void Delete(T obj);
     }
 }

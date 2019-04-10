@@ -15,11 +15,13 @@ namespace CrawlerApp.Console
             DataStorageMySql storage = new DataStorageMySql(links, new MySql.Data.MySqlClient.MySqlConnection());
 
             List<Link> list = new List<Link>();
-            Crawler crawler = new Crawler(new HttpClient(), new HtmlDocument(), storage, list);
+            Scheduler scheduler = new Scheduler(new List<Link>(), new object());
+            Crawler crawler = new Crawler(new HttpClient(), new HtmlDocument(), storage, scheduler, 16);
 
 
-            Task.Run(async () => { await crawler.Start(new Uri("http://example.com/")); }).GetAwaiter();
+            var task = crawler.Start(new Uri("http://example.com/"));
             System.Console.WriteLine("The crawler is running. Press any key to stop...");
+            Task.WaitAny(task);
             System.Console.ReadLine();
         }
     }

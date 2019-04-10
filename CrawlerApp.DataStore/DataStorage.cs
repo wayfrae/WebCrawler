@@ -36,12 +36,17 @@ namespace CrawlerApp.DataStore
             }
         }
 
-        public void Update(Link obj)
+        public bool Update(Link obj)
         {
             try
             {
                 var temp = _links.Find(x => x.Address == obj.Address && x.FoundOn == obj.FoundOn);
+                if(temp == null)
+                {
+                    return false;
+                }
                 temp = obj;
+                return true;
             }
             catch (Exception)
             {
