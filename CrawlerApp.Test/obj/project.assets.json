@@ -29,6 +29,21 @@
           "lib/netstandard2.0/HtmlAgilityPack.dll": {}
         }
       },
+      "Microsoft.AspNet.SignalR/2.4.1": {
+        "type": "package"
+      },
+      "Microsoft.AspNet.SignalR.Client/2.4.1": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "11.0.2"
+        },
+        "compile": {
+          "lib/netstandard2.0/Microsoft.AspNet.SignalR.Client.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.AspNet.SignalR.Client.dll": {}
+        }
+      },
       "Microsoft.AspNetCore.AzureKeyVault.HostingStartup/2.0.2": {
         "type": "package",
         "dependencies": {
@@ -3269,6 +3284,8 @@
         "framework": ".NETCoreApp,Version=v2.2",
         "dependencies": {
           "CrawlerApp.DataStore": "1.0.0",
+          "Microsoft.AspNet.SignalR": "2.4.1",
+          "Microsoft.AspNet.SignalR.Client": "2.4.1",
           "Microsoft.AspNetCore.AzureKeyVault.HostingStartup": "2.0.2",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "2.2.0",
           "MySql.Data": "8.0.15",
@@ -3379,6 +3396,38 @@
         "lib/uap10.0/HtmlAgilityPack.dll",
         "lib/uap10.0/HtmlAgilityPack.pdb",
         "lib/uap10.0/HtmlAgilityPack.pri"
+      ]
+    },
+    "Microsoft.AspNet.SignalR/2.4.1": {
+      "sha512": "KM+JSAg1w4YGoi4xxjw5KxrhbgRoGY6tTICMnxHpSaC0L2i3nBlD6mEm6OROvXFQi3hiyn48HfDfkJJrC0nrQA==",
+      "type": "package",
+      "path": "microsoft.aspnet.signalr/2.4.1",
+      "files": [
+        ".signature.p7s",
+        "microsoft.aspnet.signalr.2.4.1.nupkg.sha512",
+        "microsoft.aspnet.signalr.nuspec"
+      ]
+    },
+    "Microsoft.AspNet.SignalR.Client/2.4.1": {
+      "sha512": "UCcZIQta/oyRRsI3yNijyCIdnwIQrym9hxCiHOD9xanL3CsFEXaa2/cq3PpBqlpHKcEdQNOu3m/AV3qPkoXpUw==",
+      "type": "package",
+      "path": "microsoft.aspnet.signalr.client/2.4.1",
+      "files": [
+        ".signature.p7s",
+        "lib/net40/Microsoft.AspNet.SignalR.Client.dll",
+        "lib/net40/Microsoft.AspNet.SignalR.Client.pdb",
+        "lib/net40/Microsoft.AspNet.SignalR.Client.xml",
+        "lib/net45/Microsoft.AspNet.SignalR.Client.dll",
+        "lib/net45/Microsoft.AspNet.SignalR.Client.pdb",
+        "lib/net45/Microsoft.AspNet.SignalR.Client.xml",
+        "lib/netstandard1.3/Microsoft.AspNet.SignalR.Client.dll",
+        "lib/netstandard1.3/Microsoft.AspNet.SignalR.Client.pdb",
+        "lib/netstandard1.3/Microsoft.AspNet.SignalR.Client.xml",
+        "lib/netstandard2.0/Microsoft.AspNet.SignalR.Client.dll",
+        "lib/netstandard2.0/Microsoft.AspNet.SignalR.Client.pdb",
+        "lib/netstandard2.0/Microsoft.AspNet.SignalR.Client.xml",
+        "microsoft.aspnet.signalr.client.2.4.1.nupkg.sha512",
+        "microsoft.aspnet.signalr.client.nuspec"
       ]
     },
     "Microsoft.AspNetCore.AzureKeyVault.HostingStartup/2.0.2": {

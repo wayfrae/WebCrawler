@@ -21,6 +21,14 @@ namespace CrawlerApp.DataStore
 
         }
 
+        public DataStorageMySql(List<Link> list)
+        {
+            _links = list;
+            this.connection = new MySqlConnection();
+            this.connection.ConnectionString = _connectionString;
+
+        }
+
         public void Create(Link obj)
         {
                 try
@@ -97,7 +105,27 @@ namespace CrawlerApp.DataStore
                 }
 
             return _links;
-        }        
+        }
+
+        public int CountRows()
+        {
+            
+            try
+            {
+                using (var connection = new MySqlConnection(_connectionString))
+                {
+                    MySqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "SELECT COUNT(*) FROM links";
+                    connection.Open();
+                    return int.Parse(cmd.ExecuteScalar().ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            return 0;
+        }
 
         public Link GetByID(int id)
         {

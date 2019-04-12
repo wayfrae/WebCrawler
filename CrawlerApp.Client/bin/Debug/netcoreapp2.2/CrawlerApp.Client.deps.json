@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.2",
-    "signature": "b55eef6300ec123fe471e26ef7c95c92ce62393b"
+    "signature": "97a095a32674308cbd25f5a25fbe7d8412c92460"
   },
   "compilationOptions": {
     "defines": [
@@ -25,6 +25,8 @@
       "CrawlerApp.Client/1.0.0": {
         "dependencies": {
           "CrawlerApp.DataStore": "1.0.0",
+          "Microsoft.AspNet.SignalR": "2.4.1",
+          "Microsoft.AspNet.SignalR.Client": "2.4.1",
           "Microsoft.AspNetCore.App": "2.2.0",
           "Microsoft.AspNetCore.AzureKeyVault.HostingStartup": "2.0.2",
           "Microsoft.AspNetCore.Razor.Design": "2.2.0",
@@ -54,6 +56,21 @@
         },
         "compile": {
           "lib/netstandard1.0/Google.Protobuf.dll": {}
+        }
+      },
+      "Microsoft.AspNet.SignalR/2.4.1": {},
+      "Microsoft.AspNet.SignalR.Client/2.4.1": {
+        "dependencies": {
+          "Newtonsoft.Json": "11.0.2"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.AspNet.SignalR.Client.dll": {
+            "assemblyVersion": "2.4.1.0",
+            "fileVersion": "2.4.1.19093"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/Microsoft.AspNet.SignalR.Client.dll": {}
         }
       },
       "Microsoft.AspNetCore.AzureKeyVault.HostingStartup/2.0.2": {
@@ -3875,6 +3892,20 @@
       "sha512": "sha512-j/gbpRZ68sgvdi/vXI39Cj/jWG4d1dtDqfWbkjC9dErNWu/dFcIlq1LIgLscea+llZ6nzm06wz/JGziOegAL7Q==",
       "path": "google.protobuf/3.5.1",
       "hashPath": "google.protobuf.3.5.1.nupkg.sha512"
+    },
+    "Microsoft.AspNet.SignalR/2.4.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-KM+JSAg1w4YGoi4xxjw5KxrhbgRoGY6tTICMnxHpSaC0L2i3nBlD6mEm6OROvXFQi3hiyn48HfDfkJJrC0nrQA==",
+      "path": "microsoft.aspnet.signalr/2.4.1",
+      "hashPath": "microsoft.aspnet.signalr.2.4.1.nupkg.sha512"
+    },
+    "Microsoft.AspNet.SignalR.Client/2.4.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-UCcZIQta/oyRRsI3yNijyCIdnwIQrym9hxCiHOD9xanL3CsFEXaa2/cq3PpBqlpHKcEdQNOu3m/AV3qPkoXpUw==",
+      "path": "microsoft.aspnet.signalr.client/2.4.1",
+      "hashPath": "microsoft.aspnet.signalr.client.2.4.1.nupkg.sha512"
     },
     "Microsoft.AspNetCore.AzureKeyVault.HostingStartup/2.0.2": {
       "type": "package",
