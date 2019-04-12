@@ -41,6 +41,53 @@ namespace CrawlerApp.Client.Controllers
             return link;
         }
 
+        
+
+        // GET: /Links/ToCrawl
+        [HttpGet("tocrawl")]
+        public async Task<ActionResult<IEnumerable<Link>>> GetLinksToCrawl()
+        {
+            var links = _context.Links.Where(x => x.IsCrawled == false);
+
+            if (links == null)
+            {
+                return NotFound();
+            }
+
+            return await links.ToListAsync();
+        }
+
+        // GET: /Links/ToCrawl/Count
+        [HttpGet("tocrawl/count")]
+        public int GetToCrawlCount()
+        {
+            var links = _context.Links.Where(x => x.IsCrawled == false).Count();
+
+            return links;
+        }
+
+        // GET: /Links/HaveCrawled
+        [HttpGet("havecrawled")]
+        public async Task<ActionResult<IEnumerable<Link>>> GetLinksHaveCrawled()
+        {
+            var links = _context.Links.Where(x => x.IsCrawled == true);
+
+            if (links == null)
+            {
+                return NotFound();
+            }
+
+            return await links.ToListAsync();
+        }
+
+        // GET: /Links/ToCrawl/Count
+        [HttpGet("havecrawled/count")]
+        public int GetHaveCrawledCount()
+        {
+            var links = _context.Links.Where(x => x.IsCrawled == true).Count();
+            return links;
+        }
+
         // PUT: /Links/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutLink(int id, Link link)
