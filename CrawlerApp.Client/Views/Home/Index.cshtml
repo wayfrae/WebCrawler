@@ -5,69 +5,11 @@
 <div class="text-center">
     <h1 class="display-4">Web Crawler</h1>
     <h6 class="display-6">By Zach Frazier</h6>
-    <canvas id="myChart" width="400" height="400"></canvas>
+    <div class="container">
+        <canvas id="myChart" width="400" height="400"></canvas>
+    </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script>
-        var toCrawl;
-        var haveCrawled;
-
-        var ctx = document.getElementById('myChart').getContext('2d');
-
-        $.getJSON(window.location + "/links/tocrawl/count").done(function (data)
-        {
-            console.log(data);
-            toCrawl = data;
-        });
-        $.getJSON(window.location + "/links/havecrawled/count").done(function (data) {
-            console.log(data);
-            haveCrawled = data;
-        });
-
-        console.log("To crawl: " + toCrawl);
-        console.log("Have Crawled: " + haveCrawled);
-
-        function updateChart(chart, data) {
-            removeData(chart);
-            addData(data);
-            chart.update();
-        }
-
-        function addData(data) {
-            chart.data.datasets.forEach((dataset) => {
-                dataset.data.push(data);
-            });
-        }
-
-        function removeData(chart) {
-            chart.data.datasets.forEach((dataset) => {
-                dataset.data.pop();
-            });
-        }
-        
-        var myChart = new Chart(ctx,
-            {
-                type: 'doughnut',
-                data: {
-                    labels: ["To Crawl", "Have Crawled"],
-                    datasets: [
-                        {
-                            label: "Population (millions)",
-                            backgroundColor: ["#3e95cd", "#8e5ea2"],
-                            data: [1, 1]
-                        }
-                    ]
-                },
-                options: {
-                    title: {
-                        display: true,
-                        text: 'Predicted world population (millions) in 2050'
-                    }
-                }
-            });
-        
-
-        
-    </script>
+    
     <div class="container">
         <input id="toCrawl" hidden />
         <input id="haveCrawled" hidden />
