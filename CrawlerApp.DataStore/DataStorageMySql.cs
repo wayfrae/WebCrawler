@@ -16,7 +16,7 @@ namespace CrawlerApp.DataStore
             _links = list;
 
         }
-        
+
         public void Create(Link obj)
         {
                 try
