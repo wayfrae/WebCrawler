@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using MySql.Data;
 using MySql.Data.MySqlClient;
 
 namespace CrawlerApp.DataStore
@@ -10,14 +8,12 @@ namespace CrawlerApp.DataStore
     {
 
         private string _connectionString = "server=school-projects.mysql.database.azure.com;uid=wayfrae@school-projects;pwd=Password1;database=webcrawler";
-        private List<Link> _links;
-        private MySqlConnection connection;
+        private readonly List<Link> _links;
+        private readonly object _lock = new object();
 
-        public DataStorageMySql(List<Link> list, MySqlConnection connection)
+        public DataStorageMySql(List<Link> list)
         {
             _links = list;
-            this.connection = connection;
-            this.connection.ConnectionString = _connectionString;
 
         }
 
@@ -36,14 +32,14 @@ namespace CrawlerApp.DataStore
                         cmd.Parameters.Add("@isCrawled", MySqlDbType.Bit).Value = obj.IsCrawled;
                         cmd.Parameters.Add("@date", MySqlDbType.DateTime).Value = obj.Date;
                         cmd.Parameters.Add("@foundOn", MySqlDbType.LongText).Value = obj.FoundOn;
-                        var rowsAffected = cmd.ExecuteNonQuery();
+                        cmd.ExecuteNonQuery();
                         obj.ID = cmd.LastInsertedId;
                     }
                                         
                 }
             catch (Exception ex)
                 {
-                    Console.WriteLine(ex.ToString());
+                    Console.WriteLine("MySQL Create:" + ex);
                 }       
 
         }
@@ -57,46 +53,49 @@ namespace CrawlerApp.DataStore
                     Console.WriteLine("Connecting to MySQL...");
                     conn.Open();
 
-                    string sql = $"DELETE FROM links WHERE ID = {obj.ID};";
-                    MySqlCommand cmd = new MySqlCommand(sql, conn);
+                    var sql = $"DELETE FROM links WHERE ID = {obj.ID};";
+                    var cmd = new MySqlCommand(sql, conn);
                     cmd.ExecuteNonQuery();
                     
                     
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.ToString());
+                    Console.WriteLine(ex.StackTrace);
                 }
             }
         }
 
         public IEnumerable<Link> GetAll()
         {
-            _links.Clear();
-            
+            lock (_lock)
+            {
+                _links.Clear();
+
                 try
                 {
-                using (var connection = new MySqlConnection(_connectionString))
-                {
-                    MySqlCommand cmd = connection.CreateCommand();
-                    cmd.CommandText = "SELECT * FROM links";
-                    connection.Open();
-                    using (MySqlDataReader rdr = cmd.ExecuteReader())
+                    using (var connection = new MySqlConnection(_connectionString))
                     {
-                        while (rdr.Read())
+                        MySqlCommand cmd = connection.CreateCommand();
+                        cmd.CommandText = "SELECT * FROM links";
+                        connection.Open();
+                        using (MySqlDataReader rdr = cmd.ExecuteReader())
                         {
-                            Link link = CreateLink(rdr[0], rdr[1], rdr[2], rdr[3], rdr[4]);
-                            _links.Add(link);
+                            while (rdr.Read())
+                            {
+                                Link link = CreateLink(rdr[0], rdr[1], rdr[2], rdr[3], rdr[4]);
+                                _links.Add(link);
+                            }
                         }
-                    } 
-                }
+                    }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.ToString());
+                    Console.WriteLine("Get all: " + ex);
                 }
 
-            return _links;
+                return _links; 
+            }
         }        
 
         public Link GetByID(int id)
@@ -128,24 +127,19 @@ namespace CrawlerApp.DataStore
                 cmd.Parameters.Add("@foundOn", MySqlDbType.LongText).Value = obj.FoundOn;
                 var rowsAffected = cmd.ExecuteNonQuery();
 
-                if (rowsAffected == 0)
-                {
-                    return false;
-                }
-                return true; 
+                return rowsAffected != 0;
             }
 
         }
         
-        private Link CreateLink(object v1, object v2, object v3, object v4, object v5)
+        private static Link CreateLink(object v1, object v2, object v3, object v4, object v5)
         {
-            var i = v4.ToString();
             return new Link
             {
                 ID = long.Parse(v1.ToString()),
                 Address = v2.ToString(),
                 Response = v3.ToString(),
-                IsCrawled = v4.ToString().Equals("0") ? false : true,
+                IsCrawled = !v4.ToString().Equals("0"),
                 Date = (DateTime)v5,
                 FoundOn = v5.ToString()
             };

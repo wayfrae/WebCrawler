@@ -7,8 +7,8 @@ namespace CrawlerApp.Console
 {
     class Scheduler : IScheduler
     {
-        private List<Link> _links;
-        private object _lock;
+        private readonly List<Link> _links;
+        private readonly object _lock;
 
         public Scheduler(List<Link> list, object listLock)
         {
@@ -20,7 +20,8 @@ namespace CrawlerApp.Console
         {                        
             lock (_lock)
             {
-                var link = _links[0];
+                if (_links.Count == 0) return null;
+                Link link = _links[0];
                 _links.RemoveAt(0);
                 return link;
             }
@@ -28,11 +29,10 @@ namespace CrawlerApp.Console
 
         public bool HasNext()
         {
-            if(_links.Count == 0)
+            lock (_lock)
             {
-                return false;
+                return _links.Count != 0;
             }
-            return true;
         }
         
         public void Push(Link obj)
