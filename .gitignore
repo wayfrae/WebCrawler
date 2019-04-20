@@ -8,4 +8,9 @@ CrawlerApp.DataStore/obj/
 CrawlerApp.Test/obj/
 /.vs
 **/azureKeyVault.json
-**/appsettings.json
+*.suo
+*.user
+_ReSharper.*
+bin
+obj
+packages
