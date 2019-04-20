@@ -35,7 +35,9 @@ namespace CrawlerApp.Client
             });
 
             services.AddDbContext<Models.CrawlerContext>(opt =>
-                opt.UseInMemoryDatabase("LinksList"));
+                //opt.UseInMemoryDatabase("LinksList"));
+                opt.UseMySql(Configuration["ConnectionStrings:MySql"]));
+                
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

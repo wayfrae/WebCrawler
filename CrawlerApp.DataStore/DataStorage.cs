@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CrawlerApp.DataStore
 {
-    class DataStorage : IDataStorage<Link>
+    public class DataStorage : IDataStorage<Link>
     {
         private List<Link> _links { get; set; }
 
@@ -36,18 +36,28 @@ namespace CrawlerApp.DataStore
             }
         }
 
-        public void Update(Link obj)
+        public bool Update(Link obj)
         {
             try
             {
-                var temp = _links.Find(x => x.ID == obj.ID);
+                var temp = _links.Find(x => x.Address == obj.Address && x.FoundOn == obj.FoundOn);
+                if(temp == null)
+                {
+                    return false;
+                }
                 temp = obj;
+                return true;
             }
             catch (Exception)
             {
 
                 throw;
             }
+        }
+
+        public DataStorage(List<Link> list)
+        {
+            _links = list;
         }
     }
 }

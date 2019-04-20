@@ -13,5 +13,10 @@ namespace CrawlerApp.Client.Models
         }
 
         public DbSet<Link> Links { get; set; }
+
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<Link>().HasKey(vf => new { vf.ID, vf.Address, vf.FoundOn });
+        //}
     }    
 }

@@ -6,6 +6,6 @@ namespace CrawlerApp.DataStore
 {
     public class EntityBase
     {
-        public int ID { get; protected set; }
+        public long ID { get; set; }
     }
 }
