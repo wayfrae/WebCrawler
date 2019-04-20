@@ -94,9 +94,29 @@ namespace CrawlerApp.DataStore
                     Console.WriteLine("Get all: " + ex);
                 }
 
-                return _links; 
+                return _links;
             }
-        }        
+        }
+
+        public int CountRows()
+        {
+            
+            try
+            {
+                using (var connection = new MySqlConnection(_connectionString))
+                {
+                    MySqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "SELECT COUNT(*) FROM links";
+                    connection.Open();
+                    return int.Parse(cmd.ExecuteScalar().ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            return 0;
+        }
 
         public Link GetByID(int id)
         {

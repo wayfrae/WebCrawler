@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CrawlerApp.Client.Models;
+using Microsoft.AspNetCore.SignalR;
 
 namespace CrawlerApp.Client.Controllers
 {
@@ -14,10 +15,12 @@ namespace CrawlerApp.Client.Controllers
     public class LinksController : ControllerBase
     {
         private readonly CrawlerContext _context;
+        private readonly IHubContext<LinksHub> _hubContext;
 
-        public LinksController(CrawlerContext context)
+        public LinksController(CrawlerContext context, IHubContext<LinksHub> hubContext)
         {
             _context = context;
+            _hubContext = hubContext;
         }
 
         // GET: /Links
@@ -39,6 +42,53 @@ namespace CrawlerApp.Client.Controllers
             }
 
             return link;
+        }
+
+        
+
+        // GET: /Links/ToCrawl
+        [HttpGet("tocrawl")]
+        public async Task<ActionResult<IEnumerable<Link>>> GetLinksToCrawl()
+        {
+            var links = _context.Links.Where(x => x.IsCrawled == false);
+
+            if (links == null)
+            {
+                return NotFound();
+            }
+
+            return await links.ToListAsync();
+        }
+
+        // GET: /Links/ToCrawl/Count
+        [HttpGet("tocrawl/count")]
+        public int GetToCrawlCount()
+        {
+            var links = _context.Links.Where(x => x.IsCrawled == false).Count();
+
+            return links;
+        }
+
+        // GET: /Links/HaveCrawled
+        [HttpGet("havecrawled")]
+        public async Task<ActionResult<IEnumerable<Link>>> GetLinksHaveCrawled()
+        {
+            var links = _context.Links.Where(x => x.IsCrawled == true);
+
+            if (links == null)
+            {
+                return NotFound();
+            }
+
+            return await links.ToListAsync();
+        }
+
+        // GET: /Links/ToCrawl/Count
+        [HttpGet("havecrawled/count")]
+        public int GetHaveCrawledCount()
+        {
+            var links = _context.Links.Where(x => x.IsCrawled == true).Count();
+            return links;
         }
 
         // PUT: /Links/5
@@ -68,6 +118,7 @@ namespace CrawlerApp.Client.Controllers
                 }
             }
 
+            await _hubContext.Clients.All.SendAsync("NotifyChange");
             return NoContent();
         }
 
@@ -77,6 +128,7 @@ namespace CrawlerApp.Client.Controllers
         {
             _context.Links.Add(link);
             await _context.SaveChangesAsync();
+            await _hubContext.Clients.All.SendAsync("NotifyChange");
 
             return CreatedAtAction("GetLink", new { id = link.ID }, link);
         }

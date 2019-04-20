@@ -3,6 +3,39 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Web Crawler</h1>
+    <h6 class="display-6">By Zach Frazier</h6>
+    <div class="container">
+        <canvas id="myChart" width="400" height="400"></canvas>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    
+    <div class="container">
+        <input id="toCrawl" hidden />
+        <input id="haveCrawled" hidden />
+        <div class="row">&nbsp;</div>
+        <div class="row">
+            <div class="col-6">&nbsp;</div>
+            <div class="col-6">
+                User..........<input type="text" id="userInput" />
+                <br />
+                Message...<input type="text" id="messageInput" />
+                <input type="button" id="sendButton" value="Send Message" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <hr />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">&nbsp;</div>
+            <div class="col-6">
+                <ul id="messagesList"></ul>
+            </div>
+        </div>
+    </div>
+    <script src="~/lib/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/links.js"></script>
 </div>
+
