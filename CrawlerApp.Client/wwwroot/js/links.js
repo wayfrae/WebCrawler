@@ -1,6 +1,8 @@
 ﻿"use strict";
 
 var connection = new signalR.HubConnectionBuilder().withUrl("/linkshub").build();
+var toCrawl;
+var haveCrawled;
 
 //Disable send button until connection is established
 document.getElementById("sendButton").disabled = true;   
@@ -13,6 +15,28 @@ connection.on("ReceiveMessage", function (user, message) {
     document.getElementById("messagesList").appendChild(li);
 });
 
+var ctx = document.getElementById("myChart");
+var myChart = new Chart(ctx,
+    {
+        type: 'doughnut',
+        data: {
+            labels: ["To Crawl", "Have Crawled"],
+            datasets: [
+                {
+                    label: "links",
+                    backgroundColor: ["#3e95cd", "#8e5ea2"],
+                    data: [1, 1]
+                }
+            ]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'All links retreived'
+            }
+        }
+    });
+
 connection.on("NotifyChange", function () {
     $.getJSON(window.location + "/links/tocrawl/count").done(function (data) {
         console.log(data);
@@ -22,7 +46,9 @@ connection.on("NotifyChange", function () {
             console.log(data);
             haveCrawled = data;
         }).done(function () {
-            updateChart(myChart, [toCrawl, haveCrawled]);
+            myChart.data.datasets[0].data[0] = toCrawl;
+            myChart.data.datasets[0].data[1] = haveCrawled;
+            myChart.update();
         });
     });
     

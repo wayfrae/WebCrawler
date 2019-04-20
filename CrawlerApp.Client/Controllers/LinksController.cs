@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CrawlerApp.Client.Models;
+using Microsoft.AspNetCore.SignalR;
 
 namespace CrawlerApp.Client.Controllers
 {
@@ -14,10 +15,12 @@ namespace CrawlerApp.Client.Controllers
     public class LinksController : ControllerBase
     {
         private readonly CrawlerContext _context;
+        private readonly IHubContext<LinksHub> _hubContext;
 
-        public LinksController(CrawlerContext context)
+        public LinksController(CrawlerContext context, IHubContext<LinksHub> hubContext)
         {
             _context = context;
+            _hubContext = hubContext;
         }
 
         // GET: /Links
@@ -115,6 +118,7 @@ namespace CrawlerApp.Client.Controllers
                 }
             }
 
+            await _hubContext.Clients.All.SendAsync("NotifyChange");
             return NoContent();
         }
 
@@ -124,6 +128,7 @@ namespace CrawlerApp.Client.Controllers
         {
             _context.Links.Add(link);
             await _context.SaveChangesAsync();
+            await _hubContext.Clients.All.SendAsync("NotifyChange");
 
             return CreatedAtAction("GetLink", new { id = link.ID }, link);
         }
