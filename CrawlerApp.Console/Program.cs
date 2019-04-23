@@ -2,6 +2,7 @@
 using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -11,18 +12,74 @@ namespace CrawlerApp.Console
     {
         static void Main(string[] args)
         {
-            List<Link> links = new List<Link>();
-            DataStorageMySql storage = new DataStorageMySql(links);
+            var links = new List<Link>();
+            var storage = new DataStorageMySql(links);
+            Task start;
+            var list = new List<Link>();
+            var scheduler = new Scheduler(new List<Link>(), new object());
+            var crawler = new Crawler(new HttpClient(), storage, scheduler, 16);
+            var url = Environment.GetCommandLineArgs();
+            if (url.Length > 1)
+            {
+                System.Console.WriteLine(url);
+                start = crawler.Start(new Uri(url[1]));
+            }
+            else
+            {
+                System.Console.WriteLine("____________________________________");
+                System.Console.WriteLine("|****Welcome to the web crawler****|");
+                System.Console.WriteLine("|****     By: Zach Frazier     ****|");
+                System.Console.WriteLine("Instructions:");
+                System.Console.WriteLine("start [web address] (begins crawling at specified address)");
+                System.Console.WriteLine("stop (exits the program immediately)");
 
-            List<Link> list = new List<Link>();
-            Scheduler scheduler = new Scheduler(new List<Link>(), new object());
-            Crawler crawler = new Crawler(new HttpClient(), storage, scheduler, 16);
+                while (true)
+                {
+                    System.Console.Write(">");
+                    var input = System.Console.ReadLine();
+                    if (input.Length > 4 && input.Substring(0, 5).ToLower().Equals("start"))
+                    {
+                        var inputSplit = input.Split(' ');
+                        try
+                        {
+                            var crawlAddress = new Uri(inputSplit[1]);
+                            Task.Run(() => crawler.Start(crawlAddress));
+                        }
+                        catch(Exception e)
+                        {
+                            System.Console.WriteLine(e.Message);
+                            continue;
+                        }
+                        
+                        break;
+                    }
+                    else
+                    {
+                        if (input.Length == 0) continue;
+                        System.Console.WriteLine("Invalid command. Use: 'start [web address]' to start the crawler.");
+                    }
+                }
+                
+            }
+            
+            System.Console.WriteLine("The crawler is running. Type 'stop' to stop...");
 
-
-            var task = crawler.Start(new Uri("http://example.com/"));
-            System.Console.WriteLine("The crawler is running. Press any key to stop...");
-            Task.WaitAny(task);
-            System.Console.ReadLine();
+            while (true)
+            {
+                System.Console.Write(">");
+                var input = System.Console.ReadLine();
+                if (input.ToLower().Equals("stop"))
+                {
+                    crawler.Stop();
+                    System.Console.WriteLine("The crawler has stopped.");
+                    break;
+                }
+                else
+                {
+                    if (input.Length == 0) continue;
+                    System.Console.WriteLine("Invalid command.");
+                }
+            }
         }
     }
 }

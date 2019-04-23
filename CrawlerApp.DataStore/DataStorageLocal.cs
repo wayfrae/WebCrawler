@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CrawlerApp.DataStore
 {
-    public class DataStorage : IDataStorage<Link>
+    public class DataStorageLocal : IDataStorage<Link>
     {
         private List<Link> _links { get; set; }
 
@@ -18,7 +19,7 @@ namespace CrawlerApp.DataStore
             _links.Remove(obj);
         }
 
-        public IEnumerable<Link> GetAll()
+        public async Task<IEnumerable<Link>> GetAll()
         {
             return _links;
         }
@@ -36,17 +37,12 @@ namespace CrawlerApp.DataStore
             }
         }
 
-        public bool Update(Link obj)
+        public void Update(Link obj)
         {
             try
             {
                 var temp = _links.Find(x => x.Address == obj.Address && x.FoundOn == obj.FoundOn);
-                if(temp == null)
-                {
-                    return false;
-                }
-                temp = obj;
-                return true;
+                
             }
             catch (Exception)
             {
@@ -55,7 +51,7 @@ namespace CrawlerApp.DataStore
             }
         }
 
-        public DataStorage(List<Link> list)
+        public DataStorageLocal(List<Link> list)
         {
             _links = list;
         }

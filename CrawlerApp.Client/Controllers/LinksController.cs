@@ -126,9 +126,15 @@ namespace CrawlerApp.Client.Controllers
         [HttpPost]
         public async Task<ActionResult<Link>> PostLink(Link link)
         {
+            if (_context.Links.Count(x => x.Address.Equals(link.Address) && x.FoundOn.Equals(link.FoundOn)) != 0)
+            {
+                return Conflict();
+            }
             _context.Links.Add(link);
-            await _context.SaveChangesAsync();
-            await _hubContext.Clients.All.SendAsync("NotifyChange");
+            var save = _context.SaveChangesAsync();
+            var send = _hubContext.Clients.All.SendAsync("NotifyChange");
+
+            Task.WaitAll(send, save);
 
             return CreatedAtAction("GetLink", new { id = link.ID }, link);
         }
