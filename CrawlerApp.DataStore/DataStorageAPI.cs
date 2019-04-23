@@ -1,85 +1,76 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
+using Google.Protobuf;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using Newtonsoft.Json;
 
 namespace CrawlerApp.DataStore
 {
     public class DataStorageAPI: IDataStorage<Link>
     {
 
-        private string _connectionString = "https://localhost:44307/links";
+        private string _baseAddress = "https://localhost:44307/links";
         private List<Link> _links;
-        private HttpClient _httpClient;
+        private readonly object _lock = new object();
 
-        public DataStorageAPI(List<Link> list, HttpClient httpClient)
+        public DataStorageAPI(List<Link> list)
         {
+            ServicePointManager.DefaultConnectionLimit = 16;
             _links = list;
-            _httpClient = httpClient;
         }        
 
         public async void Create(Link obj)
         {
             try
             {
-
-                _httpClient.PostAsync(_connectionString)
-                
-
-                // return URI of the created resource.
-                return response.Headers.Location;
-
+                using (var client = new HttpClient())
+                {
+                    var jsonLink = JsonConvert.SerializeObject(obj);
+                    client.DefaultRequestHeaders.ConnectionClose = false;
+                    client.BaseAddress = new Uri(_baseAddress);
+                    var content = new StringContent(jsonLink.ToString(), Encoding.UTF8, "application/json");
+                    HttpResponseMessage result = await client.PostAsync(_baseAddress, content);
+                    if (!result.IsSuccessStatusCode)
+                    {
+                        Console.WriteLine($"{result.StatusCode}: {result.ReasonPhrase}");
+                        if (result.StatusCode == HttpStatusCode.Conflict)
+                        {
+                            Update(obj);
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                Console.WriteLine(ex);
             }
-
         }
 
         public void Delete(Link obj)
         {
-            using (MySqlConnection conn = new MySqlConnection(_connectionString))
-            {
-                try
-                {
-                    Console.WriteLine("Connecting to MySQL...");
-                    conn.Open();
-
-                    string sql = $"DELETE FROM links WHERE ID = {obj.ID};";
-                    MySqlCommand cmd = new MySqlCommand(sql, conn);
-                    cmd.ExecuteNonQuery();
-
-
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
-                }
-            }
+            
         }
 
-        public IEnumerable<Link> GetAll()
+        public async Task<IEnumerable<Link>> GetAll()
         {
-            _links.Clear();
-
             try
             {
-                using (var connection = new MySqlConnection(_connectionString))
+                using (var client = new HttpClient())
                 {
-                    MySqlCommand cmd = connection.CreateCommand();
-                    cmd.CommandText = "SELECT * FROM links";
-                    connection.Open();
-                    using (MySqlDataReader rdr = cmd.ExecuteReader())
+                    client.BaseAddress = new Uri(_baseAddress);
+                    HttpResponseMessage result = await client.GetAsync(_baseAddress);
+                    result.EnsureSuccessStatusCode();
+                    var str = await result.Content.ReadAsStringAsync();
+                    lock (_lock)
                     {
-                        while (rdr.Read())
-                        {
-                            Link link = CreateLink(rdr[0], rdr[1], rdr[2], rdr[3], rdr[4]);
-                            _links.Add(link);
-                        }
+                        _links = JsonConvert.DeserializeObject<List<Link>>(str);
                     }
+                    return _links;
                 }
             }
             catch (Exception ex)
@@ -92,22 +83,7 @@ namespace CrawlerApp.DataStore
 
         public int CountRows()
         {
-
-            try
-            {
-                using (var connection = new MySqlConnection(_connectionString))
-                {
-                    MySqlCommand cmd = connection.CreateCommand();
-                    cmd.CommandText = "SELECT COUNT(*) FROM links";
-                    connection.Open();
-                    return int.Parse(cmd.ExecuteScalar().ToString());
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
-            return 0;
+            return _links.Count;
         }
 
         public Link GetByID(int id)
@@ -125,27 +101,20 @@ namespace CrawlerApp.DataStore
             return link;
         }
 
-        public bool Update(Link obj)
+        public async void Update(Link obj)
         {
-            using (var connection = new MySqlConnection(_connectionString))
+            using (var client = new HttpClient())
             {
-                connection.Open();
-                MySqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = $"UPDATE links SET Address=@address, Response=@response, IsCrawled=@isCrawled, Date=@date, FoundOn=@foundOn WHERE id={obj.ID};";
-                cmd.Parameters.Add("@address", MySqlDbType.LongText).Value = obj.Address;
-                cmd.Parameters.Add("@response", MySqlDbType.LongText).Value = obj.Response;
-                cmd.Parameters.Add("@isCrawled", MySqlDbType.Bit).Value = obj.IsCrawled;
-                cmd.Parameters.Add("@date", MySqlDbType.DateTime).Value = obj.Date;
-                cmd.Parameters.Add("@foundOn", MySqlDbType.LongText).Value = obj.FoundOn;
-                var rowsAffected = cmd.ExecuteNonQuery();
-
-                if (rowsAffected == 0)
+                var jsonLink = JsonConvert.SerializeObject(obj);
+                    client.DefaultRequestHeaders.ConnectionClose = false;
+                client.BaseAddress = new Uri(_baseAddress);
+                var content = new StringContent(jsonLink.ToString(), Encoding.UTF8, "application/json");
+                HttpResponseMessage result = await client.PutAsync($"{_baseAddress}/{obj.ID}", content);
+                if (!result.IsSuccessStatusCode)
                 {
-                    return false;
+                    Console.WriteLine($"{result.StatusCode}: {result.ReasonPhrase}");
                 }
-                return true;
             }
-
         }
 
         private Link CreateLink(object v1, object v2, object v3, object v4, object v5)
@@ -156,7 +125,7 @@ namespace CrawlerApp.DataStore
                 ID = long.Parse(v1.ToString()),
                 Address = v2.ToString(),
                 Response = v3.ToString(),
-                IsCrawled = v4.ToString().Equals("0") ? false : true,
+                IsCrawled = !v4.ToString().Equals("0"),
                 Date = (DateTime)v5,
                 FoundOn = v5.ToString()
             };

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 
 namespace CrawlerApp.DataStore
@@ -66,7 +67,7 @@ namespace CrawlerApp.DataStore
             }
         }
 
-        public IEnumerable<Link> GetAll()
+        public async Task<IEnumerable<Link>> GetAll()
         {
             lock (_lock)
             {
@@ -133,11 +134,10 @@ namespace CrawlerApp.DataStore
             return link;
         }
 
-        public bool Update(Link obj)
+        public void Update(Link obj)
         {
             using (var connection = new MySqlConnection(_connectionString))
             {
-                connection.Open();
                 MySqlCommand cmd = connection.CreateCommand();
                 cmd.CommandText = $"UPDATE links SET Address=@address, Response=@response, IsCrawled=@isCrawled, Date=@date, FoundOn=@foundOn WHERE id={obj.ID};";
                 cmd.Parameters.Add("@address", MySqlDbType.LongText).Value = obj.Address;
@@ -146,8 +146,6 @@ namespace CrawlerApp.DataStore
                 cmd.Parameters.Add("@date", MySqlDbType.DateTime).Value = obj.Date;
                 cmd.Parameters.Add("@foundOn", MySqlDbType.LongText).Value = obj.FoundOn;
                 var rowsAffected = cmd.ExecuteNonQuery();
-
-                return rowsAffected != 0;
             }
 
         }

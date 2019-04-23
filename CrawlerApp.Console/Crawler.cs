@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using HtmlAgilityPack;
 using System.Threading.Tasks;
@@ -36,7 +37,7 @@ namespace CrawlerApp.Console
         public async Task<bool> Start(Uri urlToCrawl)
         {
             IsCrawling = true;
-            foreach(Link link in _storage.GetAll())
+            foreach(Link link in await _storage.GetAll())
             {
                 if (!link.IsCrawled)
                 {
@@ -59,7 +60,8 @@ namespace CrawlerApp.Console
                 }
             }
 
-            //while (true)
+            //Single-threaded crawler
+            //while (true) 
             //{
             //    Uri crawl = urlToCrawl;
             //    //tasks.Add(Task.Run(() => StartCrawlerAsync(crawl, new Link())));
@@ -81,13 +83,14 @@ namespace CrawlerApp.Console
             while (IsCrawling)
             {
                 await Crawl(urlToCrawl, crawlerObjective);
-                if (_storage.GetAll() is List<Link> linksToCrawl)
-                    foreach (Link link in linksToCrawl)
-                    {
-                        if (link.IsCrawled || linksToCrawl.Find(x => x.Address.Equals(link.Address)) != null) continue;
+                var linksToCrawl = await _storage.GetAll();
+                var toCrawl = linksToCrawl.ToList();
+                foreach (Link link in toCrawl)
+                {
+                    if (link.IsCrawled || toCrawl.Find(x => x.Address.Equals(link.Address)) != null) continue;
                         
-                        linksToCrawl.Add(link); 
-                    }
+                    toCrawl.Add(link); 
+                }
 
                 if (_scheduler.HasNext())
                 {
@@ -220,7 +223,7 @@ namespace CrawlerApp.Console
 
         public void Stop()
         {
-            throw new NotImplementedException();
+            Environment.Exit(Environment.ExitCode);
         }
                 
     }

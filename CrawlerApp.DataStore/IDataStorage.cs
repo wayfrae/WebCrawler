@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CrawlerApp.DataStore
 {
@@ -7,8 +8,8 @@ namespace CrawlerApp.DataStore
     {
         void Create(T obj);
         T GetByID(int id);
-        IEnumerable<T> GetAll();
-        bool Update(T obj);
+        Task<IEnumerable<Link>> GetAll();
+        void Update(T obj);
         void Delete(T obj);
     }
 }

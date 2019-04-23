@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace CrawlerApp.Client.Models
 {    
-    public class CrawlerContext : DbContext
+    public sealed class CrawlerContext : DbContext
     {
         public CrawlerContext(DbContextOptions<CrawlerContext> options) : base(options)
         {
+            Database.SetCommandTimeout(9000);
         }
 
         public DbSet<Link> Links { get; set; }
