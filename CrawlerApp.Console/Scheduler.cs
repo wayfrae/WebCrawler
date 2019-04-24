@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CrawlerApp.Console
 {
-    class Scheduler : IScheduler
+    public class Scheduler : IScheduler
     {
         private readonly List<Link> _links;
         private readonly object _lock;

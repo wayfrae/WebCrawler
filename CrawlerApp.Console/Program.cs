@@ -59,7 +59,6 @@ namespace CrawlerApp.Console
                         System.Console.WriteLine("Invalid command. Use: 'start [web address]' to start the crawler.");
                     }
                 }
-                
             }
             
             System.Console.WriteLine("The crawler is running. Type 'stop' to stop...");

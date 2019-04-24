@@ -31,21 +31,15 @@ namespace CrawlerApp.Console
             _scheduler = scheduler;
             _storage = storage;
             _threadLimit = numberOfThreads;
-            
         }
 
         public async Task<bool> Start(Uri urlToCrawl)
         {
             IsCrawling = true;
-            foreach(Link link in await _storage.GetAll())
-            {
-                if (!link.IsCrawled)
-                {
-                    _scheduler.Push(link);
-                }
-            }
+            await FillScheduler();
             var tasks = new List<Task>();
             ThreadPool.GetAvailableThreads(out _threadsAvailable, out _);
+
             while (IsCrawling && _threadsAvailable > _threadLimit)
             {
                 for (var i = _threadLimit; i > 0; i--)
@@ -74,6 +68,17 @@ namespace CrawlerApp.Console
             //}
             await Task.WhenAll(tasks);
             return false;
+        }
+
+        private async Task FillScheduler()
+        {
+            foreach (Link link in await _storage.GetAll())
+            {
+                if (!link.IsCrawled)
+                {
+                    _scheduler.Push(link);
+                }
+            }
         }
 
         private async Task StartCrawlerAsync(Uri startingUrlToCrawl, Link crawlerObjective)
