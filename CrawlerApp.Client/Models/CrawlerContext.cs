@@ -10,7 +10,6 @@ namespace CrawlerApp.Client.Models
     {
         public CrawlerContext(DbContextOptions<CrawlerContext> options) : base(options)
         {
-            Database.SetCommandTimeout(9000);
         }
 
         public DbSet<Link> Links { get; set; }

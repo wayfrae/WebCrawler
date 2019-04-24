@@ -17,10 +17,10 @@ namespace CrawlerApp.Client.Controllers
         private readonly CrawlerContext _context;
         private readonly IHubContext<LinksHub> _hubContext;
 
-        public LinksController(CrawlerContext context, IHubContext<LinksHub> hubContext)
+        public LinksController(CrawlerContext context)
         {
             _context = context;
-            _hubContext = hubContext;
+            //_hubContext = hubContext; //uncomment to use SignalR
         }
 
         // GET: /Links
@@ -34,8 +34,7 @@ namespace CrawlerApp.Client.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Link>> GetLink(int id)
         {
-            var link = await _context.Links.FindAsync(id);
-
+            var link = await _context.Links.FirstOrDefaultAsync(x => x.ID == id);
             if (link == null)
             {
                 return NotFound();
@@ -64,7 +63,7 @@ namespace CrawlerApp.Client.Controllers
         [HttpGet("tocrawl/count")]
         public int GetToCrawlCount()
         {
-            var links = _context.Links.Where(x => x.IsCrawled == false).Count();
+            var links = _context.Links.Count(x => x.IsCrawled == false);
 
             return links;
         }
@@ -87,17 +86,17 @@ namespace CrawlerApp.Client.Controllers
         [HttpGet("havecrawled/count")]
         public int GetHaveCrawledCount()
         {
-            var links = _context.Links.Where(x => x.IsCrawled == true).Count();
+            var links = _context.Links.Count(x => x.IsCrawled == true);
             return links;
         }
 
         // PUT: /Links/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutLink(int id, Link link)
+        public async Task<ActionResult> PutLink(int id, Link link)
         {
             if (id != link.ID)
             {
-                return BadRequest();
+                return NotFound();
             }
 
             _context.Entry(link).State = EntityState.Modified;
@@ -112,13 +111,10 @@ namespace CrawlerApp.Client.Controllers
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
+
+                return Conflict();
             }
 
-            await _hubContext.Clients.All.SendAsync("NotifyChange");
             return NoContent();
         }
 
@@ -131,10 +127,7 @@ namespace CrawlerApp.Client.Controllers
                 return Conflict();
             }
             _context.Links.Add(link);
-            var save = _context.SaveChangesAsync();
-            var send = _hubContext.Clients.All.SendAsync("NotifyChange");
-
-            Task.WaitAll(send, save);
+            await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetLink", new { id = link.ID }, link);
         }
