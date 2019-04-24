@@ -5,15 +5,39 @@
 <div class="text-center">
     <h1 class="display-4">Web Crawler</h1>
     <h6 >By Zach Frazier</h6>
+    <hr/>
     <div class="container">
         <div class="row">
-            <canvas class="col-6 mx-auto" id="myChart" width="400" height="400"></canvas>
+            <canvas class="col-md-6 mx-auto" id="myChart" width="400" height="400"></canvas>
+            <div class="col-md-6" style="height: 600px;">
+                <!-- Tab links -->
+                <div class="tab">
+                    <button class="tablinks" onclick="openLink(event, 'linksToCrawl')">Links to crawl</button>
+                    <button class="tablinks" onclick="openLink(event, 'linksHaveCrawled')">Links that have been crawled</button>
+                    <button class="tablinks" onclick="openLink(event, 'allLinks')">All links</button>
+                    <button class="btn" onclick="populateLinks()"><span class="sync-alt"></span></button>
+                </div>
+
+                <!-- Tab content -->
+                <div id="linksToCrawl" class="tabcontent">
+                    <h3>Links to crawl</h3>
+                    <div id="accordionToCrawl"></div>
+                </div>
+                <div id="linksHaveCrawled" class="tabcontent">
+                    <h3>Links that have been crawled</h3>
+                    <div id="accordionHaveCrawled"></div>
+                </div>
+
+                <div id="allLinks" class="tabcontent">
+                    <h3>All links</h3>
+                    <div id="accordionAll"></div>
+                </div>
+            </div>
         </div>
         
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    
-    <script src="~/lib/signalr/dist/browser/signalr.js"></script>
-    <script src="~/js/links.js"></script>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="~/lib/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/links.js"></script>
 
