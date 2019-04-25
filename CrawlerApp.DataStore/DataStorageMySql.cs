@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 
@@ -35,6 +36,7 @@ namespace CrawlerApp.DataStore
                         cmd.Parameters.Add("@foundOn", MySqlDbType.LongText).Value = obj.FoundOn;
                         cmd.ExecuteNonQuery();
                         obj.ID = cmd.LastInsertedId;
+                        _links.Add(obj);
                     }
                                         
                 }
@@ -62,7 +64,7 @@ namespace CrawlerApp.DataStore
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.StackTrace);
+                    Console.WriteLine("Delete():" + ex.StackTrace);
                 }
             }
         }
@@ -114,26 +116,17 @@ namespace CrawlerApp.DataStore
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                Console.WriteLine("CountRows(): "  + ex.ToString());
             }
             return 0;
         }
 
         public Link GetByID(int id)
         {
-            if(FindLink(id) == null)
-            {
-                GetAll();
-            }
-            return FindLink(id);
-        }
-
-        private Link FindLink(int id)
-        {
-            Link link = _links.Find(x => x.ID == id);
+            Link link = _links.FirstOrDefault(x => x.ID == id);
             return link;
         }
-
+        
         public void Update(Link obj)
         {
             using (var connection = new MySqlConnection(_connectionString))

@@ -18,11 +18,11 @@ namespace CrawlerApp.Console
         private int _threadsAvailable;
         private readonly IScheduler _scheduler;
         private int _threadLimit;
-        private readonly object _lock = new object();
+        private readonly object _lock;
 
         public bool IsCrawling { get; private set; }
 
-        public Crawler(HttpClient client, IDataStorage<Link> storage, IScheduler scheduler, int numberOfThreads)
+        public Crawler(HttpClient client, IDataStorage<Link> storage, IScheduler scheduler, int numberOfThreads, object @lock)
         {
             _httpClient = client;
             _userAgent = "WeberStateUniversityWebCrawler / 1.0 wayfrae";
@@ -31,6 +31,7 @@ namespace CrawlerApp.Console
             _scheduler = scheduler;
             _storage = storage;
             _threadLimit = numberOfThreads;
+            _lock = @lock;
         }
 
         public async Task<bool> Start(Uri urlToCrawl)
@@ -100,6 +101,7 @@ namespace CrawlerApp.Console
                 if (_scheduler.HasNext())
                 {
                     urlToCrawl = StringToUri(_scheduler.GetNext().Address);
+                    IsCrawling = true;
                 }
                 else
                 {

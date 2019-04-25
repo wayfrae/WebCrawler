@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CrawlerApp.Client.Migrations
 {
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -24,6 +24,12 @@ namespace CrawlerApp.Client.Migrations
                 {
                     table.PrimaryKey("PK_Links", x => x.ID);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Links_Address_FoundOn",
+                table: "Links",
+                columns: new[] { "Address", "FoundOn" },
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

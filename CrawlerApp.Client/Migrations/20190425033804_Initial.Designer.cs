@@ -9,14 +9,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CrawlerApp.Client.Migrations
 {
     [DbContext(typeof(CrawlerContext))]
-    [Migration("20190407075759_initial")]
-    partial class initial
+    [Migration("20190425033804_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.1-servicing-10028")
+                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("CrawlerApp.Client.Models.Link", b =>
@@ -35,6 +35,9 @@ namespace CrawlerApp.Client.Migrations
                     b.Property<string>("Response");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("Address", "FoundOn")
+                        .IsUnique();
 
                     b.ToTable("Links");
                 });

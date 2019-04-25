@@ -17,7 +17,7 @@ namespace CrawlerApp.Console
             Task start;
             var list = new List<Link>();
             var scheduler = new Scheduler(new List<Link>(), new object());
-            var crawler = new Crawler(new HttpClient(), storage, scheduler, 16);
+            var crawler = new Crawler(new HttpClient(), storage, scheduler, 16, new object());
             var url = Environment.GetCommandLineArgs();
             if (url.Length > 1)
             {
@@ -47,7 +47,7 @@ namespace CrawlerApp.Console
                         }
                         catch(Exception e)
                         {
-                            System.Console.WriteLine(e.Message);
+                            System.Console.WriteLine("Program.cs:  " + e.Message);
                             continue;
                         }
                         

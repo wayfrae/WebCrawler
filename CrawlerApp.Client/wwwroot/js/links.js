@@ -27,7 +27,6 @@ var myChart = new Chart(ctx,
             
         }
     });
-var count = 0;
 setInterval(function() {
     $.getJSON(window.location + "links/tocrawl/count").done(function(data) {
         toCrawl = data;
@@ -38,15 +37,13 @@ setInterval(function() {
             myChart.data.datasets[0].data[0] = toCrawl;
             myChart.data.datasets[0].data[1] = haveCrawled;
             myChart.options.title.text = toCrawl + " links to crawl | " + haveCrawled + " links have been crawled";
-            if (count === 0) {
-                myChart.update();
-            } else {
-                myChart.update(0);
-            }
+            myChart.update(0);
+
             });
-        count++;
     });
 }, 1000);
+
+populateLinks();
 
 $(document).ready(function() {
     setTimeout(function() { populateLinks(); }, 10000)});
@@ -94,11 +91,8 @@ function populateLinks() {
                 '<p>Found On: ' +
                 link.foundOn +
                 '</p>' +
-                '<p>Date: ' +
-                link.date +
-                '</p>' +
-                '<p>Response: ' +
-                link.response +
+                '<p>ID: ' +
+                link.id +
                 '</p>' +
                 '</div></div></div > ')
         );
@@ -130,6 +124,9 @@ function populateLinks() {
                 '</p>' +
                 '<p>Date: ' +
                 link.date +
+                '</p>' +
+                '<p>ID: ' +
+                link.id +
                 '</p>' +
                 '<p>Response: <br>' +
                 link.response +
