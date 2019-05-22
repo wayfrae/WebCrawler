@@ -13,7 +13,9 @@ namespace CrawlerApp.Console
         static void Main(string[] args)
         {
             var links = new List<Link>();
-            var storage = new DataStorageMySql(links);
+            //var storage = new DataStorageMySql(links);
+            //var storage = new DataStorageLocal(links);
+            var storage = new DataStorageAPI(links);
             Task start;
             var list = new List<Link>();
             var scheduler = new Scheduler(new List<Link>(), new object());

@@ -9,7 +9,7 @@ namespace CrawlerApp.DataStore
     public class DataStorageMySql : IDataStorage<Link>
     {
 
-        private string _connectionString = "server=school-projects.mysql.database.azure.com;uid=wayfrae@school-projects;pwd=Password1;database=webcrawler";
+        private readonly string _connectionString = "";
         private readonly List<Link> _links;
         private readonly object _lock = new object();
 
